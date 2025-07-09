@@ -1582,6 +1582,129 @@
                 alert('🎵 音樂效果展示結束！\n\n💡 提示：\n• 右鍵點擊音樂按鈕可調整音量\n• 確保 "let me take of you.mp3" 在正確位置\n• 檔案結構應該是：\n  📁 資料夾/\n  ├── 你的網站.html\n  └── let me take of you.mp3');
             }, 5000);
         }
+        
+        // 留言板功能（支援雲端同步）- 修復函數定義問題
+        async function addLoveMessage() {
+            console.log('💕 開始新增愛的留言...');
+            
+            const messageInput = document.getElementById('messageInput');
+            const messageList = document.getElementById('messageList');
+            
+            // 詳細檢查元素是否存在
+            if (!messageInput) {
+                console.error('❌ 找不到留言輸入框 #messageInput');
+                alert('錯誤：找不到留言輸入框，請重新載入頁面');
+                return;
+            }
+            
+            if (!messageList) {
+                console.error('❌ 找不到留言列表容器 #messageList');
+                alert('錯誤：找不到留言列表容器，請重新載入頁面');
+                return;
+            }
+            
+            const messageText = messageInput.value.trim();
+            console.log('📝 輸入的留言內容:', messageText);
+            
+            if (!messageText) {
+                alert('請輸入留言內容！');
+                return;
+            }
+            
+            try {
+                const messageData = {
+                    id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    text: messageText,
+                    date: new Date().toLocaleString(),
+                    timestamp: new Date().toISOString(),
+                    author: '我', 
+                    mood: '甜蜜'
+                };
+                
+                console.log('💕 準備保存留言數據:', messageData);
+                
+                // 保存到本地數據
+                memoriesData.messages.unshift(messageData);
+                memoriesData.lastUpdated = new Date().toISOString();
+                saveMemoriesData();
+                console.log('💾 本地數據已保存');
+                
+                // 同步到 Google Sheets
+                if (memoriesData.syncEnabled) {
+                    console.log('☁️ 開始同步到 Google Sheets...');
+                    try {
+                        const syncResult = await syncToGoogleSheets('addMessage', {
+                            content: messageData.text,
+                            author: messageData.author,
+                            mood: messageData.mood
+                        });
+                        
+                        if (syncResult && syncResult.success) {
+                            console.log('✅ 留言已成功同步到雲端');
+                        } else {
+                            console.warn('⚠️ 雲端同步失敗:', syncResult ? syncResult.message : '未知錯誤');
+                        }
+                    } catch (syncError) {
+                        console.error('☁️ 同步過程發生錯誤:', syncError);
+                    }
+                } else {
+                    console.log('📱 離線模式，跳過雲端同步');
+                }
+                
+                // 顯示在頁面上
+                const messageItem = document.createElement('div');
+                messageItem.className = 'message-item';
+                messageItem.innerHTML = `
+                    <div class="message-date">${messageData.date}</div>
+                    <div>${messageData.text}</div>
+                `;
+                
+                messageList.insertBefore(messageItem, messageList.firstChild);
+                messageInput.value = '';
+                
+                console.log('✅ 留言添加完成:', messageData.text);
+                
+                // 顯示成功提示
+                if (memoriesData.syncEnabled) {
+                    console.log('💕 留言已保存並同步到雲端');
+                } else {
+                    console.log('💕 留言已保存到本地（建議設置雲端同步）');
+                }
+                
+            } catch (error) {
+                console.error('❌ 新增留言時發生錯誤:', error);
+                alert('新增留言時發生錯誤：' + error.message + '\n\n請檢查瀏覽器控制台查看詳細錯誤信息。');
+            }
+        }
+        
+        // 檢查同步狀態和連接
+        async function checkSyncConnection() {
+            console.log('🔍 檢查同步連接狀態...');
+            
+            try {
+                if (!memoriesData.syncEnabled) {
+                    alert('⚠️ 雲端同步未啟用\n\n可能原因：\n• GOOGLE_SCRIPT_URL 未正確設置\n• Google Apps Script 未部署\n• 網路連接問題');
+                    return false;
+                }
+                
+                // 測試連接
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getSettings&test=true');
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ 雲端連接正常！\n\n📊 同步狀態：已啟用\n🔗 API 連接：正常\n💾 數據庫：可訪問\n\n現在可以安全地新增留言和同步數據了！');
+                    return true;
+                } else {
+                    alert('❌ 雲端連接異常\n\n錯誤：' + result.message + '\n\n請檢查 Google Apps Script 設置');
+                    return false;
+                }
+                
+            } catch (error) {
+                console.error('連接測試失敗:', error);
+                alert('❌ 連接測試失敗\n\n錯誤：' + error.message + '\n\n可能原因：\n• 網路連接問題\n• API URL 錯誤\n• CORS 政策限制');
+                return false;
+            }
+        }
 
         // 愛情測試遊戲
         function answerQuestion(answerIndex) {
