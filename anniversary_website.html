@@ -938,7 +938,7 @@
             <h3 style="color: #764ba2; margin-bottom: 20px;">💌 愛的留言板</h3>
             <div class="message-board">
                 <textarea class="message-input" id="messageInput" placeholder="寫下你想對她說的話..."></textarea>
-                <button class="upload-btn" onclick="addMessage()">💕 發送愛意</button>
+                <button class="upload-btn" onclick="addLoveMessage()">💕 發送愛意</button>
                 <div class="message-list" id="messageList"></div>
             </div>
         </div>
@@ -958,14 +958,14 @@
                 <p style="color: #666; margin-bottom: 20px;">連接 Google Sheets 實現雲端同步，永久保存你們的美好回憶</p>
                 
                 <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                    <button class="upload-btn" onclick="checkSyncConnection()">
+                        🔍 測試同步連接
+                    </button>
                     <button class="upload-btn" onclick="showSyncStatus()">
                         📊 檢查同步狀態
                     </button>
                     <button class="upload-btn" onclick="reloadFromCloud()">
                         🔄 重新載入雲端
-                    </button>
-                    <button class="upload-btn" onclick="loadFromGoogleSheets()">
-                        📥 從雲端載入
                     </button>
                     <button class="upload-btn" onclick="exportMemories()">
                         💾 導出備份
@@ -1163,14 +1163,44 @@
         
         // 顯示雲端同步狀態
         function showSyncStatus() {
+            const currentTime = new Date().toLocaleString();
+            const apiUrl = GOOGLE_SCRIPT_URL.includes('YOUR_SCRIPT_ID_HERE') ? '❌ 未設置' : '✅ 已設置';
+            
             const statusMsg = memoriesData.syncEnabled 
                 ? '✅ 雲端同步已啟用' 
-                : '⚠️ 離線模式（請設置 Google Sheets 連接）';
+                : '⚠️ 離線模式';
             
-            alert(`📊 同步狀態：${statusMsg}\n\n` +
-                  `💌 留言數量：${memoriesData.messages.length}\n` +
-                  `📅 時間軸項目：${memoriesData.timeline.length}\n` +
-                  `🔄 最後更新：${new Date(memoriesData.lastUpdated).toLocaleString()}`);
+            const detailedStatus = `📊 雲端同步狀態報告
+            
+🔗 連接狀態：${statusMsg}
+📡 API 地址：${apiUrl}
+💾 本地數據：
+  • 💌 留言數量：${memoriesData.messages.length}
+  • 📅 時間軸項目：${memoriesData.timeline.length}
+  • 📸 照片記錄：${memoriesData.photos.length}
+
+🕒 時間信息：
+  • 當前時間：${currentTime}
+  • 最後更新：${new Date(memoriesData.lastUpdated).toLocaleString()}
+  • 紀念日期：${memoriesData.anniversaryDate}
+
+💡 同步說明：
+  • 網站 → Google Sheets：自動即時同步
+  • Google Sheets → 網站：需手動重新載入
+  
+🔧 故障排除：
+  ${memoriesData.syncEnabled ? 
+    '• 同步正常，如有問題請點擊「🔍 測試同步連接」' : 
+    '• 請檢查 GOOGLE_SCRIPT_URL 設置\n  • 確認 Google Apps Script 已正確部署\n  • 點擊「🔍 測試同步連接」進行診斷'}`;
+            
+            alert(detailedStatus);
+            console.log('📊 同步狀態詳情:', {
+                syncEnabled: memoriesData.syncEnabled,
+                apiUrl: GOOGLE_SCRIPT_URL,
+                messagesCount: memoriesData.messages.length,
+                timelineCount: memoriesData.timeline.length,
+                lastUpdated: memoriesData.lastUpdated
+            });
         }
         
         // 保存數據到本地存儲（在用戶自己的環境中會有效）
