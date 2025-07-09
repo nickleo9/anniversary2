@@ -975,15 +975,6 @@
                     </button>
                 </div>
                 
-                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <button class="special-btn" onclick="showGoogleSheetsGuide()" style="padding: 10px 20px; font-size: 1rem;">
-                        📚 設置教學
-                    </button>
-                    <button class="special-btn" onclick="showApiSetupGuide()" style="padding: 10px 20px; font-size: 1rem;">
-                        🔗 API 連接教學
-                    </button>
-                </div>
-                
                 <input type="file" id="importInput" accept=".json" style="display: none;" onchange="importMemories(event)">
                 
                 <div style="margin-top: 15px; font-size: 0.9rem; color: #888;">
@@ -1005,8 +996,7 @@
                 <button class="special-btn" onclick="createFireworks()">🎆 放煙火</button>
                 <button class="special-btn" onclick="generatePoem()">📝 愛情詩歌</button>
                 <button class="special-btn" onclick="addTimelineItem()">📅 新增回憶</button>
-                <button class="special-btn" onclick="testMusicEffect()">🎵 測試音樂效果</button>
-                <button class="special-btn" onclick="checkMusicFeatures()">🔧 檢查音樂功能</button>
+                <!-- 開發者功能已隱藏：testMusicEffect(), checkMusicFeatures() -->
             </div>
         </div>
     </div>
@@ -1855,6 +1845,7 @@
             console.log('✅ 週年紀念網站初始化完成！');
             console.log('🎵 音樂檔案設定為: "let me take of you.mp3"');
             console.log('☁️ 雲端同步狀態:', memoriesData.syncEnabled ? '已啟用' : '離線模式');
+            console.log('🛠️ 開發者功能：輸入 showDeveloperMode() 查看隱藏功能');
             
             // 顯示歡迎訊息
             setTimeout(() => {
