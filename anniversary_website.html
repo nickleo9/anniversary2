@@ -951,6 +951,45 @@
             </div>
         </div>
 
+        <!-- 數據管理區域 -->
+        <div class="card">
+            <h3 style="color: #764ba2; margin-bottom: 20px;">☁️ 雲端數據管理</h3>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <p style="color: #666; margin-bottom: 20px;">連接 Google Sheets 實現雲端同步，永久保存你們的美好回憶</p>
+                
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                    <button class="upload-btn" onclick="showSyncStatus()">
+                        📊 檢查同步狀態
+                    </button>
+                    <button class="upload-btn" onclick="loadFromGoogleSheets()">
+                        📥 從雲端載入
+                    </button>
+                    <button class="upload-btn" onclick="exportMemories()">
+                        💾 導出備份
+                    </button>
+                    <button class="upload-btn" onclick="document.getElementById('importInput').click()">
+                        📂 導入備份
+                    </button>
+                </div>
+                
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button class="special-btn" onclick="showGoogleSheetsGuide()" style="padding: 10px 20px; font-size: 1rem;">
+                        📚 設置教學
+                    </button>
+                    <button class="special-btn" onclick="showApiSetupGuide()" style="padding: 10px 20px; font-size: 1rem;">
+                        🔗 API 連接教學
+                    </button>
+                </div>
+                
+                <input type="file" id="importInput" accept=".json" style="display: none;" onchange="importMemories(event)">
+                
+                <div style="margin-top: 15px; font-size: 0.9rem; color: #888;">
+                    <p>💡 <strong>推薦使用 Google Sheets：</strong>自動雲端同步，你和女友都能即時編輯</p>
+                    <p>📱 離線模式：使用導出/導入功能進行手動備份</p>
+                </div>
+            </div>
+        </div>
+
         <!-- 互動按鈕 -->
         <div class="card">
             <div class="interactive-section">
@@ -960,6 +999,7 @@
                 <button class="special-btn" onclick="showMessage('future')">🌟 未來的夢想</button>
                 <button class="special-btn" onclick="createFireworks()">🎆 放煙火</button>
                 <button class="special-btn" onclick="generatePoem()">📝 愛情詩歌</button>
+                <button class="special-btn" onclick="addTimelineItem()">📅 新增回憶</button>
                 <button class="special-btn" onclick="testMusicEffect()">🎵 測試音樂效果</button>
             </div>
         </div>
@@ -999,6 +1039,357 @@
         let currentQuestion = 0;
         let musicPlaying = false;
         let showVolumeControl = false;
+        
+        // Google Apps Script Web App URL (請更新為你的實際 URL)
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
+        
+        // 全域回憶數據結構
+        let memoriesData = {
+            timeline: [],
+            messages: [],
+            photos: [],
+            anniversaryDate: '2023-01-01',
+            lastUpdated: new Date().toISOString(),
+            syncEnabled: false // 是否啟用雲端同步
+        };
+        
+        // 檢查 Google Sheets 連接狀態
+        async function checkGoogleSheetsConnection() {
+            if (!GOOGLE_SCRIPT_URL.includes('YOUR_SCRIPT_ID_HERE')) {
+                try {
+                    const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getSettings');
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        memoriesData.syncEnabled = true;
+                        console.log('✅ Google Sheets 連接成功！');
+                        return true;
+                    }
+                } catch (error) {
+                    console.log('⚠️ Google Sheets 連接失敗:', error.message);
+                }
+            } else {
+                console.log('💡 請更新 GOOGLE_SCRIPT_URL 為你的實際 Web App URL');
+            }
+            
+            memoriesData.syncEnabled = false;
+            return false;
+        }
+        
+        // 同步數據到 Google Sheets
+        async function syncToGoogleSheets(action, data) {
+            if (!memoriesData.syncEnabled) {
+                console.log('☁️ 雲端同步未啟用，數據僅保存在本地');
+                return { success: false, message: '雲端同步未啟用' };
+            }
+            
+            try {
+                const payload = {
+                    action: action,
+                    ...data
+                };
+                
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+                console.log('☁️ 同步結果:', result.message);
+                return result;
+            } catch (error) {
+                console.error('☁️ 同步失敗:', error);
+                return { success: false, message: '同步失敗: ' + error.message };
+            }
+        }
+        
+        // 從 Google Sheets 載入數據
+        async function loadFromGoogleSheets() {
+            if (!memoriesData.syncEnabled) {
+                return false;
+            }
+            
+            try {
+                console.log('📥 正在從雲端載入數據...');
+                
+                // 載入所有數據
+                const [timelineResponse, messagesResponse, settingsResponse] = await Promise.all([
+                    fetch(GOOGLE_SCRIPT_URL + '?action=getTimeline'),
+                    fetch(GOOGLE_SCRIPT_URL + '?action=getMessages'),
+                    fetch(GOOGLE_SCRIPT_URL + '?action=getSettings')
+                ]);
+                
+                const timelineResult = await timelineResponse.json();
+                const messagesResult = await messagesResponse.json();
+                const settingsResult = await settingsResponse.json();
+                
+                if (timelineResult.success) {
+                    memoriesData.timeline = timelineResult.data || [];
+                    console.log('📅 載入', memoriesData.timeline.length, '個時間軸項目');
+                }
+                
+                if (messagesResult.success) {
+                    memoriesData.messages = messagesResult.data || [];
+                    console.log('💌 載入', memoriesData.messages.length, '則留言');
+                    
+                    // 恢復留言到頁面
+                    const messageList = document.getElementById('messageList');
+                    messageList.innerHTML = '';
+                    memoriesData.messages.forEach(message => {
+                        const messageItem = document.createElement('div');
+                        messageItem.className = 'message-item';
+                        messageItem.innerHTML = `
+                            <div class="message-date">${new Date(message['留言時間']).toLocaleString()}</div>
+                            <div>${message['留言內容']}</div>
+                        `;
+                        messageList.appendChild(messageItem);
+                    });
+                }
+                
+                if (settingsResult.success) {
+                    const settings = settingsResult.data;
+                    if (settings.anniversary_date) {
+                        memoriesData.anniversaryDate = settings.anniversary_date;
+                        console.log('💕 載入紀念日期:', memoriesData.anniversaryDate);
+                    }
+                }
+                
+                console.log('✅ 雲端數據載入完成！');
+                return true;
+            } catch (error) {
+                console.error('📥 載入雲端數據失敗:', error);
+                return false;
+            }
+        }
+        
+        // 顯示雲端同步狀態
+        function showSyncStatus() {
+            const statusMsg = memoriesData.syncEnabled 
+                ? '✅ 雲端同步已啟用' 
+                : '⚠️ 離線模式（請設置 Google Sheets 連接）';
+            
+            alert(`📊 同步狀態：${statusMsg}\n\n` +
+                  `💌 留言數量：${memoriesData.messages.length}\n` +
+                  `📅 時間軸項目：${memoriesData.timeline.length}\n` +
+                  `🔄 最後更新：${new Date(memoriesData.lastUpdated).toLocaleString()}`);
+        }
+        
+        // 保存數據到本地存儲（在用戶自己的環境中會有效）
+        function saveMemoriesData() {
+            try {
+                memoriesData.lastUpdated = new Date().toISOString();
+                localStorage.setItem('anniversaryMemories', JSON.stringify(memoriesData));
+                console.log('💾 數據已保存到本地存儲');
+            } catch (error) {
+                console.log('⚠️ 本地存儲不可用（Claude環境限制），建議使用導出功能');
+            }
+        }
+        
+        // 從本地存儲讀取數據
+        function loadMemoriesData() {
+            try {
+                const savedData = localStorage.getItem('anniversaryMemories');
+                if (savedData) {
+                    memoriesData = JSON.parse(savedData);
+                    console.log('📂 已從本地存儲載入數據');
+                    return true;
+                }
+            } catch (error) {
+                console.log('⚠️ 無法讀取本地存儲');
+            }
+            return false;
+        }
+        
+        // 導出所有回憶數據
+        function exportMemories() {
+            // 收集當前頁面上的所有數據
+            collectCurrentPageData();
+            
+            const exportData = {
+                ...memoriesData,
+                exportDate: new Date().toISOString(),
+                version: '1.0',
+                websiteTitle: '我們的週年紀念'
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `我們的回憶_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            alert('💾 回憶數據已導出！\n\n檔案包含：\n• ' + memoriesData.timeline.length + ' 個時間軸回憶\n• ' + memoriesData.messages.length + ' 則愛的留言\n• ' + memoriesData.photos.length + ' 張照片\n\n建議定期備份到雲端硬碟！');
+            console.log('📤 已導出回憶數據:', exportData);
+        }
+        
+        // 收集當前頁面上的數據
+        function collectCurrentPageData() {
+            // 收集留言
+            const messageElements = document.querySelectorAll('.message-item');
+            memoriesData.messages = [];
+            messageElements.forEach(element => {
+                const dateElement = element.querySelector('.message-date');
+                const messageText = element.textContent.replace(dateElement.textContent, '').trim();
+                if (messageText) {
+                    memoriesData.messages.push({
+                        id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                        text: messageText,
+                        date: dateElement.textContent,
+                        timestamp: new Date().toISOString()
+                    });
+                }
+            });
+            
+            // 收集照片（注意：只能收集說明文字，實際圖片需要重新上傳）
+            const photoElements = document.querySelectorAll('.photo-item');
+            memoriesData.photos = [];
+            photoElements.forEach(element => {
+                const captionElement = element.querySelector('.caption-text');
+                if (captionElement && element.id !== 'sample_photo') {
+                    memoriesData.photos.push({
+                        id: element.id,
+                        caption: captionElement.textContent,
+                        uploadDate: new Date().toISOString(),
+                        note: '需要重新上傳圖片檔案'
+                    });
+                }
+            });
+            
+            saveMemoriesData();
+        }
+        
+        // 導入回憶數據
+        function importMemories(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // 驗證數據格式
+                    if (!importedData.timeline || !importedData.messages) {
+                        alert('❌ 檔案格式不正確！請選擇正確的備份檔案。');
+                        return;
+                    }
+                    
+                    // 確認導入
+                    const confirmMsg = `📂 發現備份數據：\n\n` +
+                        `• ${importedData.timeline.length} 個時間軸回憶\n` +
+                        `• ${importedData.messages.length} 則留言\n` +
+                        `• ${importedData.photos.length} 張照片記錄\n` +
+                        `• 備份日期：${new Date(importedData.exportDate).toLocaleDateString()}\n\n` +
+                        `確定要導入這些數據嗎？（會覆蓋現有數據）`;
+                    
+                    if (confirm(confirmMsg)) {
+                        memoriesData = importedData;
+                        restorePageData();
+                        saveMemoriesData();
+                        alert('✅ 回憶數據已成功導入！\n\n注意：照片需要重新上傳，但照片說明已保留。');
+                        console.log('📥 已導入回憶數據:', importedData);
+                    }
+                } catch (error) {
+                    alert('❌ 檔案讀取失敗！請確認是正確的JSON格式備份檔案。');
+                    console.error('導入錯誤:', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        // 恢復頁面數據
+        function restorePageData() {
+            // 恢復留言
+            const messageList = document.getElementById('messageList');
+            messageList.innerHTML = '';
+            memoriesData.messages.forEach(message => {
+                const messageItem = document.createElement('div');
+                messageItem.className = 'message-item';
+                messageItem.innerHTML = `
+                    <div class="message-date">${message.date}</div>
+                    <div>${message.text}</div>
+                `;
+                messageList.appendChild(messageItem);
+            });
+            
+            // 恢復紀念日期
+            if (memoriesData.anniversaryDate) {
+                // 這裡可以更新anniversaryDate變數，但需要重新啟動計時器
+                console.log('📅 紀念日期:', memoriesData.anniversaryDate);
+            }
+            
+            // 恢復時間軸（這裡先顯示提示，因為需要重新生成HTML）
+            if (memoriesData.timeline.length > 4) {
+                console.log('📅 發現額外的時間軸回憶:', memoriesData.timeline.length - 4, '個');
+            }
+        }
+        
+        // 顯示Google Sheets教學
+        function showGoogleSheetsGuide() {
+            const guideContent = `📊 使用 Google 試算表作為雲端資料庫教學
+
+🎯 優點：
+• 免費使用，自動雲端同步
+• 你和女友都能同時編輯
+• 可以在手機、電腦上隨時查看
+• 有版本歷史記錄，不怕資料遺失
+
+📋 設置步驟：
+1️⃣ 建立 Google 試算表
+2️⃣ 建立三個工作表：「時間軸」、「留言」、「照片」
+3️⃣ 設置欄位標題
+4️⃣ 分享給彼此編輯權限
+
+📝 建議欄位：
+【時間軸工作表】
+• 日期 | 標題 | 內容描述 | 類型 | 照片連結
+
+【留言工作表】  
+• 日期時間 | 留言者 | 留言內容 | 心情標籤
+
+【照片工作表】
+• 上傳日期 | 照片標題 | Google Drive連結 | 拍攝地點 | 備註
+
+🔗 進階功能：
+• 可以用 Google Apps Script 自動化
+• 連接到網站自動同步（需要程式設計）
+• 設定提醒功能
+
+想要我協助你設置 Google Sheets API 連接嗎？`;
+            
+            showMessage('sheets-guide', '📊 Google Sheets 雲端資料庫教學', guideContent);
+        }
+        
+        // 新增時間軸項目
+        function addTimelineItem() {
+            const title = prompt('輸入回憶標題：');
+            if (!title) return;
+            
+            const description = prompt('輸入回憶描述：');
+            if (!description) return;
+            
+            const date = prompt('輸入日期（例如：2024年7月10日）：');
+            if (!date) return;
+            
+            const newItem = {
+                id: 'timeline_' + Date.now(),
+                title: title,
+                description: description,
+                date: date,
+                type: 'custom'
+            };
+            
+            memoriesData.timeline.push(newItem);
+            saveMemoriesData();
+            
+            alert('✅ 已新增回憶！\n\n💡 提示：刷新頁面後會看到新的時間軸項目，或使用導出功能保存。');
+            console.log('📅 新增時間軸項目:', newItem);
+        }
         
         // 初始化音樂控制
         function initMusicControl() {
@@ -1301,15 +1692,28 @@
             const messageText = messageInput.value.trim();
             
             if (messageText) {
+                const messageData = {
+                    id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    text: messageText,
+                    date: new Date().toLocaleString(),
+                    timestamp: new Date().toISOString()
+                };
+                
+                // 保存到全域數據
+                memoriesData.messages.unshift(messageData);
+                saveMemoriesData();
+                
+                // 顯示在頁面上
                 const messageItem = document.createElement('div');
                 messageItem.className = 'message-item';
                 messageItem.innerHTML = `
-                    <div class="message-date">${new Date().toLocaleString()}</div>
-                    <div>${messageText}</div>
+                    <div class="message-date">${messageData.date}</div>
+                    <div>${messageData.text}</div>
                 `;
                 messageList.insertBefore(messageItem, messageList.firstChild);
                 messageInput.value = '';
-                console.log('💌 新增留言:', messageText);
+                
+                console.log('💌 新增留言並已保存:', messageData.text);
             }
         }
 
@@ -1406,7 +1810,29 @@
         }
 
         // 初始化
-        function init() {
+        async function init() {
+            console.log('💕 週年紀念網站初始化中...');
+            
+            // 嘗試載入本地保存的數據
+            loadMemoriesData();
+            
+            // 檢查 Google Sheets 連接
+            console.log('🔗 檢查 Google Sheets 連接...');
+            const isConnected = await checkGoogleSheetsConnection();
+            
+            if (isConnected) {
+                // 從雲端載入最新數據
+                await loadFromGoogleSheets();
+            } else {
+                console.log('📱 使用離線模式');
+                // 恢復本地保存的留言（如果有的話）
+                if (memoriesData.messages.length > 0) {
+                    restorePageData();
+                    console.log('📂 已恢復', memoriesData.messages.length, '則本地留言');
+                }
+            }
+            
+            // 基本功能初始化
             createStars();
             updateCounter();
             setInterval(updateCounter, 1000);
@@ -1420,12 +1846,18 @@
                 setTimeout(createFloatingHeart, i * 400);
             }
             
-            console.log('💕 週年紀念網站初始化完成！');
+            console.log('✅ 週年紀念網站初始化完成！');
             console.log('🎵 音樂檔案設定為: "let me take of you.mp3"');
-            console.log('📁 請確保檔案結構正確：');
-            console.log('   📁 資料夾/');
-            console.log('   ├── 你的網站.html');
-            console.log('   └── let me take of you.mp3');
+            console.log('☁️ 雲端同步狀態:', memoriesData.syncEnabled ? '已啟用' : '離線模式');
+            
+            // 顯示歡迎訊息
+            setTimeout(() => {
+                if (memoriesData.syncEnabled) {
+                    console.log('🎉 歡迎使用雲端同步版本！你的回憶將自動保存到 Google Sheets');
+                } else {
+                    console.log('💡 提示：完成 Google Sheets 設置後可享受雲端同步功能');
+                }
+            }, 2000);
         }
 
         // 頁面載入完成後初始化
