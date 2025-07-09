@@ -382,6 +382,61 @@
             transform: translateY(0);
         }
 
+        /* 照片控制按鈕 */
+        .photo-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-item:hover .photo-controls {
+            opacity: 1;
+        }
+
+        .photo-control-btn {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-control-btn:hover {
+            background: rgba(255, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
+
+        .photo-control-btn.edit-btn:hover {
+            background: rgba(0, 123, 255, 0.8);
+        }
+
+        /* 照片標題編輯 */
+        .caption-input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            font-size: inherit;
+            padding: 0;
+            outline: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .caption-input:focus {
+            border-bottom-color: white;
+        }
+
         /* 時間軸 */
         .timeline {
             position: relative;
@@ -766,12 +821,9 @@
     <!-- 隱藏的音樂播放器 -->
     <audio id="backgroundMusic" loop>
         <source src="let me take of you.mp3" type="audio/mpeg">
-        <source src="your-music-file.ogg" type="audio/ogg">
+        <source src="let me take of you.ogg" type="audio/ogg">
         您的瀏覽器不支援音樂播放功能
     </audio>
-    
-    <!-- 可選：YouTube音樂播放器（隱藏版本） -->
-    <div id="youtubePlayer" style="display: none;"></div>
 
     <div class="container">
         <!-- 標題區域 -->
@@ -867,9 +919,16 @@
             
             <div class="photo-gallery" id="photoGallery">
                 <!-- 示例照片 -->
-                <div class="photo-item">
+                <div class="photo-item" id="sample_photo">
                     <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNTBMNzUgMTAwSDEyNUwxMDAgNTBaIiBmaWxsPSIjZGRkZGRkIi8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iMzAiIGZpbGw9IiNkZGRkZGQiLz4KPHR3eHQgeD0iMTAwIiB5PSIxNzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM5OTk5OTkiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+5oiR5YCR55qE54Wn54mHPC90ZXh0Pgo8L3N2Zz4K" alt="我們的照片">
-                    <div class="caption">我們的第一張合照</div>
+                    <div class="photo-controls">
+                        <button class="photo-control-btn edit-btn" onclick="editCaption('sample_photo')" title="編輯標題">✏️</button>
+                        <button class="photo-control-btn" onclick="deletePhoto('sample_photo')" title="刪除照片">🗑️</button>
+                    </div>
+                    <div class="caption">
+                        <span class="caption-text">我們的第一張合照</span>
+                        <input class="caption-input" style="display: none;" onblur="saveCaptionEdit('sample_photo')" onkeypress="handleCaptionKeypress(event, 'sample_photo')">
+                    </div>
                 </div>
             </div>
         </div>
@@ -901,6 +960,7 @@
                 <button class="special-btn" onclick="showMessage('future')">🌟 未來的夢想</button>
                 <button class="special-btn" onclick="createFireworks()">🎆 放煙火</button>
                 <button class="special-btn" onclick="generatePoem()">📝 愛情詩歌</button>
+                <button class="special-btn" onclick="testMusicEffect()">🎵 測試音樂效果</button>
             </div>
         </div>
     </div>
@@ -914,43 +974,6 @@
     </div>
 
     <script>
-        // YouTube API支援（可選功能）
-        let youtubePlayer;
-        let useYoutube = false; // 設為true使用YouTube音樂
-        const youtubeVideoId = 'dQw4w9WgXcQ'; // 替換成你想要的YouTube影片ID
-        
-        // 載入YouTube API
-        function loadYouTubeAPI() {
-            if (useYoutube) {
-                const tag = document.createElement('script');
-                tag.src = "https://www.youtube.com/iframe_api";
-                const firstScriptTag = document.getElementsByTagName('script')[0];
-                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            }
-        }
-        
-        // YouTube API準備完成時的回調函數
-        function onYouTubeIframeAPIReady() {
-            youtubePlayer = new YT.Player('youtubePlayer', {
-                height: '1',
-                width: '1',
-                videoId: youtubeVideoId,
-                playerVars: {
-                    'autoplay': 0,
-                    'controls': 0,
-                    'loop': 1,
-                    'playlist': youtubeVideoId
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
-        }
-        
-        function onPlayerReady(event) {
-            // YouTube播放器準備就緒
-        }
-        
         // 在一起的日期 (請修改為你們的紀念日)
         const anniversaryDate = new Date('2023-01-01');
         
@@ -993,7 +1016,7 @@
                 volumeValue.textContent = this.value + '%';
             });
             
-            // 點擊音樂控制器顯示/隱藏音量控制
+            // 右鍵點擊音樂控制器顯示/隱藏音量控制
             musicControl.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
                 toggleVolumeControl();
@@ -1014,13 +1037,16 @@
             
             // 檢測音樂加載錯誤
             audio.addEventListener('error', function() {
-                alert('音樂檔案無法加載！請檢查檔案路徑和格式。');
-                updateMusicStatus(false);
+                console.log('音樂加載失敗，檔案可能不存在');
             });
             
             // 檢測音樂加載成功
             audio.addEventListener('loadeddata', function() {
-                console.log('音樂檔案已成功加載！');
+                console.log('音樂檔案 "let me take of you.mp3" 已成功加載！');
+            });
+            
+            audio.addEventListener('canplay', function() {
+                console.log('音樂可以播放，長度:', Math.round(audio.duration), '秒');
             });
         }
         
@@ -1036,7 +1062,7 @@
                 musicControl.classList.add('playing');
                 musicIcon.textContent = '🎵';
                 musicText.textContent = '暫停音樂';
-                console.log('音樂正在播放中...');
+                console.log('♪ 音樂正在播放中... ♪');
             } else {
                 musicControl.classList.remove('playing');
                 musicIcon.textContent = '🎵';
@@ -1052,6 +1078,7 @@
             
             if (showVolumeControl) {
                 volumeControl.classList.add('show');
+                console.log('音量控制已顯示，當前音量:', document.getElementById('volumeSlider').value + '%');
             } else {
                 volumeControl.classList.remove('show');
             }
@@ -1093,42 +1120,50 @@
 
         // 音樂控制
         function toggleMusic() {
-            const musicControl = document.getElementById('musicControl');
+            const audio = document.getElementById('backgroundMusic');
             
-            if (useYoutube && youtubePlayer) {
-                // 使用YouTube音樂
-                if (musicPlaying) {
-                    youtubePlayer.pauseVideo();
-                    musicControl.textContent = '🎵 播放音樂';
-                    musicControl.classList.remove('playing');
-                    musicPlaying = false;
-                } else {
-                    youtubePlayer.playVideo();
-                    musicControl.textContent = '🎵 暫停音樂';
-                    musicControl.classList.add('playing');
-                    musicPlaying = true;
-                }
+            console.log('🎵 點擊音樂按鈕，當前狀態:', musicPlaying);
+            
+            if (musicPlaying) {
+                audio.pause();
+                console.log('⏸️ 嘗試暫停音樂');
             } else {
-                // 使用本地音樂檔案
-                const audio = document.getElementById('backgroundMusic');
+                console.log('▶️ 嘗試播放音樂 "let me take of you.mp3"');
                 
-                if (musicPlaying) {
-                    audio.pause();
-                    musicControl.textContent = '🎵 播放音樂';
-                    musicControl.classList.remove('playing');
-                    musicPlaying = false;
-                } else {
-                    // 播放音樂前需要用戶互動（瀏覽器政策）
-                    audio.play().then(() => {
-                        musicControl.textContent = '🎵 暫停音樂';
-                        musicControl.classList.add('playing');
-                        musicPlaying = true;
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('✅ 音樂播放成功！');
                     }).catch((error) => {
-                        console.log('音樂播放失敗：', error);
-                        alert('請確認音樂檔案路徑正確，或嘗試重新點擊播放按鈕');
+                        console.log('❌ 音樂播放失敗：', error);
+                        
+                        let errorMessage = '無法播放 "let me take of you.mp3"。\n\n可能的原因：\n';
+                        errorMessage += '1. 檔案名稱不正確（檢查是否為 "let me take of you.mp3"）\n';
+                        errorMessage += '2. 檔案不在HTML檔案的同一個資料夾\n';
+                        errorMessage += '3. 檔案格式問題\n';
+                        errorMessage += '4. 瀏覽器限制\n\n';
+                        errorMessage += '請確認檔案存在且路徑正確。';
+                        
+                        alert(errorMessage);
+                        updateMusicStatus(false);
                     });
                 }
             }
+        }
+        
+        // 測試音樂效果（不需要真實音樂檔案）
+        function testMusicEffect() {
+            alert('🎵 點擊確定後，請觀察右上角音樂按鈕的變化！\n\n應該會看到：\n✨ 按鈕變成藍紫色\n🎶 出現跳動的音樂波形\n💫 按鈕開始脈衝動畫\n📝 文字變成「暫停音樂」');
+            
+            // 直接觸發視覺效果
+            updateMusicStatus(true);
+            
+            // 5秒後自動停止效果
+            setTimeout(() => {
+                updateMusicStatus(false);
+                alert('🎵 音樂效果展示結束！\n\n💡 提示：\n• 右鍵點擊音樂按鈕可調整音量\n• 確保 "let me take of you.mp3" 在正確位置\n• 檔案結構應該是：\n  📁 資料夾/\n  ├── 你的網站.html\n  └── let me take of you.mp3');
+            }, 5000);
         }
 
         // 愛情測試遊戲
@@ -1162,16 +1197,102 @@
                 reader.onload = function(e) {
                     const photoItem = document.createElement('div');
                     photoItem.className = 'photo-item';
+                    const photoId = 'photo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    photoItem.id = photoId;
                     photoItem.innerHTML = `
                         <img src="${e.target.result}" alt="上傳的照片">
-                        <div class="caption">我們的回憶 ${new Date().toLocaleDateString()}</div>
+                        <div class="photo-controls">
+                            <button class="photo-control-btn edit-btn" onclick="editCaption('${photoId}')" title="編輯標題">✏️</button>
+                            <button class="photo-control-btn" onclick="deletePhoto('${photoId}')" title="刪除照片">🗑️</button>
+                        </div>
+                        <div class="caption">
+                            <span class="caption-text">我們的回憶 ${new Date().toLocaleDateString()}</span>
+                            <input class="caption-input" style="display: none;" onblur="saveCaptionEdit('${photoId}')" onkeypress="handleCaptionKeypress(event, '${photoId}')">
+                        </div>
                     `;
                     gallery.appendChild(photoItem);
+                    console.log('📸 新增照片:', photoId);
                 };
                 
                 reader.readAsDataURL(file);
             }
         });
+
+        // 刪除照片功能
+        window.deletePhoto = function(photoId) {
+            console.log('🗑️ 刪除照片被點擊:', photoId);
+            if (confirm('確定要刪除這張照片嗎？')) {
+                const photoElement = document.getElementById(photoId);
+                if (photoElement) {
+                    photoElement.style.transition = 'all 0.3s ease';
+                    photoElement.style.transform = 'scale(0)';
+                    photoElement.style.opacity = '0';
+                    setTimeout(() => {
+                        photoElement.remove();
+                        console.log('✅ 照片已刪除:', photoId);
+                    }, 300);
+                } else {
+                    console.log('❌ 找不到照片元素:', photoId);
+                }
+            }
+        };
+
+        // 編輯照片標題功能
+        window.editCaption = function(photoId) {
+            console.log('✏️ 編輯標題被點擊:', photoId);
+            const photoElement = document.getElementById(photoId);
+            if (photoElement) {
+                const captionText = photoElement.querySelector('.caption-text');
+                const captionInput = photoElement.querySelector('.caption-input');
+                
+                if (captionText && captionInput) {
+                    captionInput.value = captionText.textContent;
+                    captionText.style.display = 'none';
+                    captionInput.style.display = 'inline';
+                    captionInput.focus();
+                    captionInput.select();
+                    console.log('📝 進入編輯模式');
+                }
+            }
+        };
+
+        // 保存編輯的標題
+        window.saveCaptionEdit = function(photoId) {
+            const photoElement = document.getElementById(photoId);
+            if (photoElement) {
+                const captionText = photoElement.querySelector('.caption-text');
+                const captionInput = photoElement.querySelector('.caption-input');
+                
+                if (captionText && captionInput) {
+                    if (captionInput.value.trim()) {
+                        captionText.textContent = captionInput.value.trim();
+                        console.log('💾 標題已保存:', captionInput.value.trim());
+                    }
+                    
+                    captionText.style.display = 'inline';
+                    captionInput.style.display = 'none';
+                }
+            }
+        };
+
+        // 處理標題編輯時的按鍵事件
+        window.handleCaptionKeypress = function(event, photoId) {
+            if (event.key === 'Enter') {
+                saveCaptionEdit(photoId);
+            } else if (event.key === 'Escape') {
+                const photoElement = document.getElementById(photoId);
+                if (photoElement) {
+                    const captionText = photoElement.querySelector('.caption-text');
+                    const captionInput = photoElement.querySelector('.caption-input');
+                    
+                    if (captionText && captionInput) {
+                        captionText.style.display = 'inline';
+                        captionInput.style.display = 'none';
+                        console.log('🚫 取消編輯');
+                    }
+                }
+            }
+        };
 
         // 留言板功能
         function addMessage() {
@@ -1188,6 +1309,7 @@
                 `;
                 messageList.insertBefore(messageItem, messageList.firstChild);
                 messageInput.value = '';
+                console.log('💌 新增留言:', messageText);
             }
         }
 
@@ -1196,6 +1318,7 @@
             const fireworksContainer = document.getElementById('fireworks');
             const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b'];
             
+            console.log('🎆 放煙火！');
             for (let i = 0; i < 15; i++) {
                 setTimeout(() => {
                     const firework = document.createElement('div');
@@ -1289,13 +1412,20 @@
             setInterval(updateCounter, 1000);
             setInterval(createFloatingHeart, 2000);
             
-            // 載入YouTube API（如果需要）
-            loadYouTubeAPI();
+            // 初始化音樂控制
+            initMusicControl();
             
             // 創建初始愛心
             for (let i = 0; i < 5; i++) {
                 setTimeout(createFloatingHeart, i * 400);
             }
+            
+            console.log('💕 週年紀念網站初始化完成！');
+            console.log('🎵 音樂檔案設定為: "let me take of you.mp3"');
+            console.log('📁 請確保檔案結構正確：');
+            console.log('   📁 資料夾/');
+            console.log('   ├── 你的網站.html');
+            console.log('   └── let me take of you.mp3');
         }
 
         // 頁面載入完成後初始化
