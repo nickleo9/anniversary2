@@ -961,6 +961,9 @@
                     <button class="upload-btn" onclick="showSyncStatus()">
                         📊 檢查同步狀態
                     </button>
+                    <button class="upload-btn" onclick="reloadFromCloud()">
+                        🔄 重新載入雲端
+                    </button>
                     <button class="upload-btn" onclick="loadFromGoogleSheets()">
                         📥 從雲端載入
                     </button>
@@ -984,8 +987,10 @@
                 <input type="file" id="importInput" accept=".json" style="display: none;" onchange="importMemories(event)">
                 
                 <div style="margin-top: 15px; font-size: 0.9rem; color: #888;">
-                    <p>💡 <strong>推薦使用 Google Sheets：</strong>自動雲端同步，你和女友都能即時編輯</p>
-                    <p>📱 離線模式：使用導出/導入功能進行手動備份</p>
+                    <p>💡 <strong>同步說明：</strong></p>
+                    <p>🌐 網站 → Google Sheets：自動即時同步</p>
+                    <p>📊 Google Sheets → 網站：點擊「🔄 重新載入雲端」手動更新</p>
+                    <p>📱 建議：在 Google Sheets 編輯後，回到網站點擊重新載入按鈕</p>
                 </div>
             </div>
         </div>
@@ -1041,7 +1046,7 @@
         let showVolumeControl = false;
         
         // Google Apps Script Web App URL (請更新為你的實際 URL)
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0mrCsgp4bu1_S2NunSN4cIVVxXB7o1EwDDXmkLfbmhFtUoULu7Rr6qNObP95wV1hT/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
         
         // 全域回憶數據結構
         let memoriesData = {
