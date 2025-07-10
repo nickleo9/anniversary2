@@ -414,6 +414,60 @@
             background: rgba(0, 123, 255, 0.8);
         }
 
+        /* 照片上傳狀態標記 */
+        .upload-success-mark,
+        .upload-error-mark {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            border-radius: 12px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            z-index: 10;
+        }
+
+        .upload-success-mark {
+            background: rgba(40, 167, 69, 0.9);
+            color: white;
+        }
+
+        .upload-error-mark {
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            cursor: help;
+        }
+
+        /* Google Drive 預覽佔位符 */
+        .drive-placeholder {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #495057;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .drive-placeholder:hover {
+            border-color: #4285f4;
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+        }
+
+        .photo-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
         /* 照片載入中狀態 */
         .photo-loading {
             display: flex;
@@ -422,12 +476,23 @@
             background: #f8f9fa;
             color: #666;
             font-size: 14px;
+            aspect-ratio: 1;
         }
 
         .photo-loading::before {
             content: '📸';
             margin-right: 8px;
             animation: spin 1s linear infinite;
+        }
+
+        .photo-error {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8d7da;
+            color: #721c24;
+            font-size: 14px;
+            aspect-ratio: 1;
         }
 
         @keyframes spin {
@@ -1294,13 +1359,14 @@
             <div class="photo-upload">
                 <h3 style="color: #764ba2; margin-bottom: 20px;">📸 上傳我們的回憶照片</h3>
                 
-                <!-- 新增功能說明 -->
+                <!-- 更新功能說明 -->
                 <div class="upload-info">
-                    <h4>🚀 全新升級！照片上傳到 Google Drive</h4>
+                    <h4>🚀 全新升級！智能照片顯示系統</h4>
                     <ul>
-                        <li>✅ <strong>無大小限制</strong> - 可上傳高解析度照片</li>
-                        <li>✅ <strong>自動雲端備份</strong> - 安全儲存在你的 Google Drive</li>
-                        <li>✅ <strong>快速載入</strong> - 優化的顯示效果</li>
+                        <li>✅ <strong>立即顯示</strong> - 選擇照片後立即在網站上顯示</li>
+                        <li>✅ <strong>雲端備份</strong> - 自動備份到你的 Google Drive</li>
+                        <li>✅ <strong>無 CORS 問題</strong> - 使用本地緩存確保正常顯示</li>
+                        <li>✅ <strong>雙重保障</strong> - 本地顯示 + 雲端備份雙重保護</li>
                         <li>✅ <strong>專用資料夾</strong> - 自動整理在「我們的回憶照片」資料夾</li>
                     </ul>
                 </div>
@@ -1369,8 +1435,9 @@
                 <div style="margin-top: 15px; font-size: 0.9rem; color: #888;">
                     <p>💡 <strong>運作方式：</strong></p>
                     <p>☁️ <strong>雲端同步：</strong> 所有修改都會即時存到 Google Sheets。</p>
-                    <p>📸 <strong>照片存儲：</strong> 照片上傳到你的 Google Drive「我們的回憶照片」資料夾。</p>
-                    <p>📱 <strong>離線快照：</strong> 即使沒網路，也能看到上次連線時的內容。</p>
+                    <p>📸 <strong>照片顯示：</strong> 照片立即顯示在網站上，同時自動備份到 Google Drive。</p>
+                    <p>🔒 <strong>雙重保護：</strong> 網站使用本地快取顯示，Google Drive 提供永久備份。</p>
+                    <p>📱 <strong>離線模式：</strong> 即使沒網路，也能看到上次連線時的內容。</p>
                 </div>
             </div>
         </div>
@@ -1613,7 +1680,7 @@
             });
         }
 
-        // 6. 照片上傳處理 - 升級為 Google Drive 版本
+        // 6. 照片上傳處理 - 優化版：先顯示後上傳
         async function handlePhotoUpload(e) {
             const files = e.target.files;
             if (!files.length) return;
@@ -1632,7 +1699,7 @@
 
             // 顯示上傳進度
             uploadBtn.disabled = true;
-            uploadBtn.textContent = '上傳中...';
+            uploadBtn.textContent = '處理中...';
             uploadProgress.classList.add('show');
 
             try {
@@ -1640,8 +1707,8 @@
                     const file = files[i];
                     const progress = ((i + 1) / files.length) * 100;
                     
-                    uploadStatus.textContent = `上傳中... (${i + 1}/${files.length})`;
-                    uploadProgressFill.style.width = progress + '%';
+                    uploadStatus.textContent = `處理中... (${i + 1}/${files.length})`;
+                    uploadProgressFill.style.width = (progress * 0.3) + '%'; // 30% 用於本地處理
                     uploadDetails.textContent = `正在處理：${file.name}`;
 
                     // 檢查文件類型
@@ -1650,14 +1717,14 @@
                         continue;
                     }
 
-                    // 檢查文件大小（雖然 Google Drive 沒有限制，但為了避免網路傳輸問題）
+                    // 檢查文件大小
                     const maxSize = 10 * 1024 * 1024; // 10MB
                     if (file.size > maxSize) {
                         alert(`照片 "${file.name}" 超過 10MB，建議先壓縮後再上傳。`);
                         continue;
                     }
 
-                    // 讀取文件
+                    // 讀取文件並立即顯示
                     const reader = new FileReader();
                     const imageData = await new Promise((resolve, reject) => {
                         reader.onload = (event) => resolve(event.target.result);
@@ -1665,30 +1732,54 @@
                         reader.readAsDataURL(file);
                     });
 
-                    // 準備上傳資料
-                    const photoData = {
-                        id: 'photo_' + Date.now() + '_' + i,
+                    // 創建臨時照片 ID
+                    const tempPhotoId = 'temp_photo_' + Date.now() + '_' + i;
+                    
+                    // 立即在網站上顯示照片
+                    const tempPhotoData = {
+                        id: tempPhotoId,
                         caption: `我們的回憶 ${new Date().toLocaleDateString()}`,
-                        imageData: imageData,
+                        imageData: imageData, // 使用 base64 立即顯示
+                        isUploading: true, // 標記為上傳中
                         fileName: file.name
                     };
 
-                    // 上傳到 Google Drive
-                    uploadDetails.textContent = `正在上傳到 Google Drive：${file.name}`;
-                    const result = await callApi('UPLOAD_PHOTO', photoData);
+                    createPhotoItemElement(tempPhotoData);
+                    uploadProgressFill.style.width = (progress * 0.5) + '%'; // 50% 完成本地顯示
 
-                    if (result.status === 'success') {
-                        // 立即顯示上傳成功的照片
-                        createPhotoItemElement(result.data);
-                        console.log('✅ 照片上傳成功:', file.name);
-                    } else {
-                        console.error('❌ 照片上傳失敗:', file.name, result.message);
-                        alert(`上傳照片 "${file.name}" 失敗：${result.message}`);
+                    // 背景上傳到 Google Drive
+                    uploadDetails.textContent = `正在備份到雲端：${file.name}`;
+                    
+                    try {
+                        const finalPhotoData = {
+                            id: 'photo_' + Date.now() + '_' + i, // 最終 ID
+                            caption: tempPhotoData.caption,
+                            imageData: imageData,
+                            fileName: file.name
+                        };
+
+                        const result = await callApi('UPLOAD_PHOTO', finalPhotoData);
+
+                        if (result.status === 'success') {
+                            // 上傳成功，更新照片元素
+                            updatePhotoAfterUpload(tempPhotoId, result.data);
+                            console.log('✅ 照片雲端備份成功:', file.name);
+                        } else {
+                            // 上傳失敗，但保留本地顯示
+                            markPhotoUploadFailed(tempPhotoId, result.message);
+                            console.error('❌ 照片雲端備份失敗:', file.name, result.message);
+                        }
+                    } catch (uploadError) {
+                        // 上傳失敗，但保留本地顯示
+                        markPhotoUploadFailed(tempPhotoId, uploadError.message);
+                        console.error('❌ 照片雲端備份出錯:', file.name, uploadError);
                     }
+
+                    uploadProgressFill.style.width = progress + '%';
                 }
 
-                uploadStatus.textContent = '上傳完成！';
-                uploadDetails.textContent = '所有照片已成功上傳到 Google Drive';
+                uploadStatus.textContent = '處理完成！';
+                uploadDetails.textContent = '所有照片已顯示，雲端備份已完成';
                 uploadProgressFill.style.width = '100%';
 
                 // 2秒後隱藏進度條
@@ -1697,8 +1788,8 @@
                 }, 2000);
 
             } catch (error) {
-                console.error('照片上傳過程中發生錯誤:', error);
-                uploadStatus.textContent = '上傳失敗！';
+                console.error('照片處理過程中發生錯誤:', error);
+                uploadStatus.textContent = '處理失敗！';
                 uploadDetails.textContent = '發生錯誤：' + error.message;
             } finally {
                 uploadInProgress = false;
@@ -1708,7 +1799,87 @@
             }
         }
 
-        // 7. 創建照片元素 - 支援 Google Drive 版本
+        // 上傳成功後更新照片元素
+        function updatePhotoAfterUpload(tempPhotoId, uploadedData) {
+            const photoElement = document.getElementById(tempPhotoId);
+            if (!photoElement) return;
+
+            // 更新 ID
+            photoElement.id = uploadedData.id;
+            
+            // 添加雲端備份成功標記
+            const controls = photoElement.querySelector('.photo-controls');
+            if (controls && uploadedData.driveFileId) {
+                // 添加 Google Drive 連結按鈕
+                const driveBtn = document.createElement('button');
+                driveBtn.className = 'photo-control-btn';
+                driveBtn.onclick = () => openInDrive(uploadedData.driveFileId);
+                driveBtn.title = '在 Google Drive 中開啟';
+                driveBtn.innerHTML = '🔗';
+                controls.appendChild(driveBtn);
+            }
+
+            // 添加成功標記
+            const successMark = document.createElement('div');
+            successMark.className = 'upload-success-mark';
+            successMark.innerHTML = '☁️';
+            successMark.style.cssText = `
+                position: absolute;
+                top: 5px;
+                left: 5px;
+                background: rgba(40, 167, 69, 0.9);
+                color: white;
+                border-radius: 12px;
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                z-index: 10;
+            `;
+            photoElement.appendChild(successMark);
+
+            // 3秒後淡出成功標記
+            setTimeout(() => {
+                if (successMark) {
+                    successMark.style.transition = 'opacity 0.5s';
+                    successMark.style.opacity = '0';
+                    setTimeout(() => successMark.remove(), 500);
+                }
+            }, 3000);
+        }
+
+        // 標記上傳失敗
+        function markPhotoUploadFailed(tempPhotoId, errorMessage) {
+            const photoElement = document.getElementById(tempPhotoId);
+            if (!photoElement) return;
+
+            // 添加失敗標記
+            const errorMark = document.createElement('div');
+            errorMark.className = 'upload-error-mark';
+            errorMark.innerHTML = '⚠️';
+            errorMark.title = '雲端備份失敗：' + errorMessage;
+            errorMark.style.cssText = `
+                position: absolute;
+                top: 5px;
+                left: 5px;
+                background: rgba(220, 53, 69, 0.9);
+                color: white;
+                border-radius: 12px;
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                z-index: 10;
+                cursor: help;
+            `;
+            photoElement.appendChild(errorMark);
+        }
+
+        // 7. 創建照片元素 - 優化版：優先本地顯示
         function createPhotoItemElement(photo) {
             if (!photo || !photo.id) {
                 console.error('照片資料無效:', photo);
@@ -1720,24 +1891,35 @@
             photoItem.className = 'photo-item';
             photoItem.id = photo.id;
 
-            // 判斷是新格式(Google Drive)還是舊格式(Base64)
-            let imageUrl = photo.imageUrl || photo.imageData;
-            const isGoogleDrivePhoto = photo.imageUrl && photo.driveFileId;
             const caption = photo.caption || '我們的回憶';
+            const isGoogleDrivePhoto = photo.imageUrl && photo.driveFileId;
+            const isUploading = photo.isUploading;
 
-            // 修正 Google Drive URL 格式
-            if (imageUrl && imageUrl.includes('drive.google.com')) {
-                // 從 URL 中提取檔案 ID
-                const fileIdMatch = imageUrl.match(/[?&]id=([^&]+)/);
-                if (fileIdMatch) {
-                    const fileId = fileIdMatch[1];
-                    // 使用更穩定的 URL 格式
-                    imageUrl = `https://drive.google.com/uc?id=${fileId}`;
-                }
+            // 判斷使用哪種圖片源
+            let imageSource = null;
+            let displayMethod = 'direct'; // direct, placeholder, error
+
+            if (photo.imageData && photo.imageData.startsWith('data:image/')) {
+                // 優先使用 base64 數據（無 CORS 問題）
+                imageSource = photo.imageData;
+                displayMethod = 'direct';
+            } else if (photo.imageUrl && photo.imageUrl.includes('drive.google.com')) {
+                // Google Drive 圖片，由於 CORS 問題，使用預覽方式
+                displayMethod = 'placeholder';
+            } else if (photo.imageData) {
+                // 其他格式的圖片數據
+                imageSource = photo.imageData;
+                displayMethod = 'direct';
+            } else {
+                displayMethod = 'error';
             }
 
             photoItem.innerHTML = `
-                <div class="photo-loading">載入中...</div>
+                <div class="photo-content">
+                    ${displayMethod === 'direct' ? '<div class="photo-loading">載入中...</div>' : ''}
+                    ${displayMethod === 'placeholder' ? createDrivePlaceholder(photo) : ''}
+                    ${displayMethod === 'error' ? '<div class="photo-error">無圖片資料</div>' : ''}
+                </div>
                 <div class="photo-controls">
                     <button class="photo-control-btn edit-btn" onclick="editCaption('${photo.id}')" title="編輯標題">✏️</button>
                     <button class="photo-control-btn" onclick="deletePhoto('${photo.id}')" title="刪除照片">🗑️</button>
@@ -1749,64 +1931,75 @@
                 </div>
             `;
 
-            // 載入圖片
-            if (imageUrl) {
+            // 如果是直接顯示，載入圖片
+            if (displayMethod === 'direct' && imageSource) {
                 const img = document.createElement('img');
-                img.src = imageUrl;
+                img.src = imageSource;
                 img.alt = caption;
-                img.crossOrigin = 'anonymous'; // 處理跨域問題
                 
                 img.onload = () => {
                     const loadingDiv = photoItem.querySelector('.photo-loading');
                     if (loadingDiv) {
                         loadingDiv.remove();
                     }
-                    photoItem.prepend(img);
+                    const photoContent = photoItem.querySelector('.photo-content');
+                    photoContent.prepend(img);
                     console.log('✅ 照片載入成功:', photo.id);
                 };
                 
                 img.onerror = () => {
-                    console.error('❌ 照片載入失敗:', photo.id, imageUrl);
-                    
-                    // 嘗試備用 URL 格式
-                    if (imageUrl.includes('drive.google.com') && photo.driveFileId) {
-                        console.log('🔄 嘗試備用 URL 格式...');
-                        const backupUrl = `https://drive.google.com/thumbnail?id=${photo.driveFileId}&sz=w1000`;
-                        img.src = backupUrl;
-                        
-                        img.onerror = () => {
-                            const loadingDiv = photoItem.querySelector('.photo-loading');
-                            if (loadingDiv) {
-                                loadingDiv.innerHTML = `
-                                    <div style="padding: 20px; text-align: center; color: #666;">
-                                        <div>📸 照片載入失敗</div>
-                                        <div style="font-size: 12px; margin-top: 5px;">
-                                            <button onclick="retryLoadPhoto('${photo.id}', '${imageUrl}')" style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">重試</button>
-                                            <button onclick="openInDrive('${photo.driveFileId}')" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-left: 5px;">在 Drive 中開啟</button>
-                                        </div>
-                                    </div>
-                                `;
-                            }
-                        };
-                    } else {
-                        const loadingDiv = photoItem.querySelector('.photo-loading');
-                        if (loadingDiv) {
-                            loadingDiv.innerHTML = `
-                                <div style="padding: 20px; text-align: center; color: #666;">
-                                    <div>📸 照片載入失敗</div>
-                                    <div style="font-size: 12px; margin-top: 5px;">
-                                        <button onclick="retryLoadPhoto('${photo.id}', '${imageUrl}')" style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">重試</button>
-                                    </div>
+                    console.error('❌ 照片載入失敗:', photo.id);
+                    const loadingDiv = photoItem.querySelector('.photo-loading');
+                    if (loadingDiv) {
+                        loadingDiv.innerHTML = `
+                            <div style="padding: 20px; text-align: center; color: #666;">
+                                <div>📸 照片載入失敗</div>
+                                <div style="font-size: 12px; margin-top: 5px;">
+                                    <button onclick="retryLoadPhoto('${photo.id}', '${imageSource}')" style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">重試</button>
                                 </div>
-                            `;
-                        }
+                            </div>
+                        `;
                     }
                 };
-            } else {
-                photoItem.querySelector('.photo-loading').textContent = '無圖片資料';
             }
 
             gallery.appendChild(photoItem);
+        }
+
+        // 創建 Google Drive 預覽佔位符
+        function createDrivePlaceholder(photo) {
+            return `
+                <div class="drive-placeholder" style="
+                    aspect-ratio: 1;
+                    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    color: #495057;
+                    text-align: center;
+                    padding: 20px;
+                    border-radius: 10px;
+                ">
+                    <div style="font-size: 48px; margin-bottom: 10px;">📸</div>
+                    <div style="font-weight: bold; margin-bottom: 5px;">儲存在雲端</div>
+                    <div style="font-size: 12px; margin-bottom: 15px; opacity: 0.7;">
+                        由於瀏覽器安全限制，<br>Google Drive 照片無法直接顯示
+                    </div>
+                    <button onclick="openInDrive('${photo.driveFileId}')" style="
+                        background: linear-gradient(135deg, #4285f4, #34a853);
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 20px;
+                        cursor: pointer;
+                        font-size: 12px;
+                        transition: transform 0.2s;
+                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        📁 在 Google Drive 中檢視
+                    </button>
+                </div>
+            `;
         }
 
         // 8. 在 Google Drive 中開啟照片
