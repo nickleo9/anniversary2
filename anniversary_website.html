@@ -1418,7 +1418,7 @@
         // =======================================================
 
         // 1. 全域常數與變數
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMNI4mmcpoOhhaqjrA7CkJ7OsaivafHFDcO-XbRyeBfm82f4lhjJvoT6HSL03i9rkE/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL2YxXtBiV3RQqs_PZEYRD42rPmIoqo98NtUqeLblLK6lddmreEOzZLghLePj59NUA/exec';
         const anniversaryDate = new Date('2023-07-12');
         const LOCAL_STORAGE_KEY = 'ourAnniversaryData';
 
@@ -1513,18 +1513,23 @@
                 initializeDefaultTimeline();
             }
 
-            // 渲染留言
+            // 渲染留言 - 增加資料驗證
             const messageList = document.getElementById('messageList');
             messageList.innerHTML = '';
-            if (data.messages) {
-                data.messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).forEach(msg => createMessageItemElement(msg));
+            if (data.messages && Array.isArray(data.messages)) {
+                data.messages
+                    .filter(msg => msg && msg.id) // 過濾掉無效的資料
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                    .forEach(msg => createMessageItemElement(msg));
             }
 
             // 渲染照片 - 支援新格式
             const photoGallery = document.getElementById('photoGallery');
             photoGallery.innerHTML = '';
-            if (data.photos) {
-                data.photos.forEach(photo => createPhotoItemElement(photo));
+            if (data.photos && Array.isArray(data.photos)) {
+                data.photos
+                    .filter(photo => photo && photo.id) // 過濾掉無效的資料
+                    .forEach(photo => createPhotoItemElement(photo));
             }
         }
 
@@ -1553,8 +1558,15 @@
         // 4. 本地儲存相關函式
         function saveDataToLocal(data) {
             try {
-                data.timestamp = new Date().toISOString();
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+                // 確保資料結構完整
+                const safeData = {
+                    timeline: Array.isArray(data.timeline) ? data.timeline : [],
+                    messages: Array.isArray(data.messages) ? data.messages : [],
+                    photos: Array.isArray(data.photos) ? data.photos : [],
+                    timestamp: new Date().toISOString()
+                };
+                
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(safeData));
                 console.log('💾 資料快照已儲存至本地。');
             } catch (e) {
                 console.error('儲存本地快照失敗:', e);
@@ -1562,8 +1574,32 @@
         }
 
         function loadDataFromLocal() {
-            const data = localStorage.getItem(LOCAL_STORAGE_KEY);
-            return data ? JSON.parse(data) : null;
+            try {
+                const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (!data) return null;
+                
+                const parsedData = JSON.parse(data);
+                
+                // 驗證資料結構
+                if (!parsedData || typeof parsedData !== 'object') {
+                    console.warn('本地資料格式錯誤，清除舊資料');
+                    localStorage.removeItem(LOCAL_STORAGE_KEY);
+                    return null;
+                }
+                
+                // 確保基本結構存在
+                return {
+                    timeline: Array.isArray(parsedData.timeline) ? parsedData.timeline : [],
+                    messages: Array.isArray(parsedData.messages) ? parsedData.messages : [],
+                    photos: Array.isArray(parsedData.photos) ? parsedData.photos : [],
+                    timestamp: parsedData.timestamp || new Date().toISOString()
+                };
+            } catch (e) {
+                console.error('讀取本地快照失敗:', e);
+                // 清除損壞的本地資料
+                localStorage.removeItem(LOCAL_STORAGE_KEY);
+                return null;
+            }
         }
 
         // 5. 事件監聽器
@@ -1674,6 +1710,11 @@
 
         // 7. 創建照片元素 - 支援 Google Drive 版本
         function createPhotoItemElement(photo) {
+            if (!photo || !photo.id) {
+                console.error('照片資料無效:', photo);
+                return;
+            }
+            
             const gallery = document.getElementById('photoGallery');
             const photoItem = document.createElement('div');
             photoItem.className = 'photo-item';
@@ -1682,6 +1723,7 @@
             // 判斷是新格式(Google Drive)還是舊格式(Base64)
             const imageUrl = photo.imageUrl || photo.imageData;
             const isGoogleDrivePhoto = photo.imageUrl && photo.driveFileId;
+            const caption = photo.caption || '我們的回憶';
 
             photoItem.innerHTML = `
                 <div class="photo-loading">載入中...</div>
@@ -1691,23 +1733,33 @@
                     ${isGoogleDrivePhoto ? '<button class="photo-control-btn" onclick="openInDrive(\'' + photo.driveFileId + '\')" title="在 Google Drive 中開啟">🔗</button>' : ''}
                 </div>
                 <div class="caption">
-                    <span class="caption-text">${photo.caption}</span>
-                    <input class="caption-input" style="display: none;" value="${photo.caption}" onblur="saveCaptionEdit('${photo.id}')" onkeypress="handleCaptionKeypress(event, '${photo.id}')">
+                    <span class="caption-text">${caption}</span>
+                    <input class="caption-input" style="display: none;" value="${caption}" onblur="saveCaptionEdit('${photo.id}')" onkeypress="handleCaptionKeypress(event, '${photo.id}')">
                 </div>
             `;
 
             // 載入圖片
-            const img = document.createElement('img');
-            img.src = imageUrl;
-            img.alt = photo.caption;
-            img.onload = () => {
-                photoItem.querySelector('.photo-loading').remove();
-                photoItem.prepend(img);
-            };
-            img.onerror = () => {
-                photoItem.querySelector('.photo-loading').textContent = '載入失敗';
-                console.error('照片載入失敗:', photo.id, imageUrl);
-            };
+            if (imageUrl) {
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = caption;
+                img.onload = () => {
+                    const loadingDiv = photoItem.querySelector('.photo-loading');
+                    if (loadingDiv) {
+                        loadingDiv.remove();
+                    }
+                    photoItem.prepend(img);
+                };
+                img.onerror = () => {
+                    const loadingDiv = photoItem.querySelector('.photo-loading');
+                    if (loadingDiv) {
+                        loadingDiv.textContent = '載入失敗';
+                    }
+                    console.error('照片載入失敗:', photo.id, imageUrl);
+                };
+            } else {
+                photoItem.querySelector('.photo-loading').textContent = '無圖片資料';
+            }
 
             gallery.appendChild(photoItem);
         }
@@ -1821,23 +1873,32 @@
 
         // 11. 剩餘的輔助函式...
         function createTimelineItemElement(item) {
+            if (!item || !item.id) {
+                console.error('時間軸項目資料無效:', item);
+                return;
+            }
+            
             const timelineContainer = document.getElementById('timeline');
             const newItem = document.createElement('div');
             newItem.className = 'timeline-item';
             newItem.setAttribute('data-id', item.id);
+            
             const displayDate = formatDateFromInput(item.date);
+            const title = item.title || '回憶';
+            const content = item.content || '';
+            
             newItem.innerHTML = `
                 <div class="timeline-controls">
                     <button class="timeline-control-btn" onclick="editTimelineItem('${item.id}')" title="編輯">✏️</button>
                     <button class="timeline-control-btn delete-btn" onclick="deleteTimelineItem('${item.id}')" title="刪除">🗑️</button>
                 </div>
-                <h4>${item.title}</h4>
-                <p>${item.content}</p>
+                <h4>${title}</h4>
+                <p>${content}</p>
                 <small>${displayDate}</small>
                 <div class="timeline-edit-form" id="edit_${item.id}">
-                    <input type="text" class="edit-input" id="edit_title_${item.id}" value="${item.title}">
-                    <textarea class="edit-input" id="edit_content_${item.id}" rows="3">${item.content}</textarea>
-                    <input type="date" class="edit-input" id="edit_date_${item.id}" value="${item.date}">
+                    <input type="text" class="edit-input" id="edit_title_${item.id}" value="${title}">
+                    <textarea class="edit-input" id="edit_content_${item.id}" rows="3">${content}</textarea>
+                    <input type="date" class="edit-input" id="edit_date_${item.id}" value="${item.date || ''}">
                     <div class="edit-btn-group">
                         <button class="edit-save-btn" onclick="saveTimelineEdit('${item.id}')">💾 保存</button>
                         <button class="edit-cancel-btn" onclick="cancelTimelineEdit('${item.id}')">❌ 取消</button>
@@ -1851,10 +1912,14 @@
             const messageItem = document.createElement('div');
             messageItem.className = 'message-item';
             messageItem.setAttribute('data-id', msg.id);
+            
+            // 確保 msg.text 是字符串，避免 replace 錯誤
+            const messageText = (msg.text || '').toString();
+            
             messageItem.innerHTML = `
                 <button class="message-delete-btn" onclick="deleteMessage('${msg.id}')" title="刪除留言">🗑️</button>
                 <div class="message-date">${new Date(msg.timestamp).toLocaleString('zh-TW')}</div>
-                <div>${msg.text.replace(/\n/g, '<br>')}</div>`;
+                <div>${messageText.replace(/\n/g, '<br>')}</div>`;
             messageList.prepend(messageItem);
         }
 
@@ -2104,11 +2169,17 @@
                 content: el.querySelector('p').textContent,
                 date: convertToDateInput(el.querySelector('small').textContent),
             }));
-            const messages = Array.from(document.querySelectorAll('.message-item[data-id]')).map(el => ({
-                id: el.dataset.id,
-                timestamp: el.querySelector('.message-date').textContent,
-                text: el.querySelector('div:last-child').innerHTML.replace(/<br>/g, '\n'),
-            }));
+            
+            const messages = Array.from(document.querySelectorAll('.message-item[data-id]')).map(el => {
+                const messageDiv = el.querySelector('div:last-child');
+                const messageText = messageDiv ? messageDiv.innerHTML.replace(/<br>/g, '\n') : '';
+                return {
+                    id: el.dataset.id,
+                    timestamp: el.querySelector('.message-date').textContent,
+                    text: messageText,
+                };
+            });
+            
             const photos = Array.from(document.querySelectorAll('.photo-item')).map(el => ({
                 id: el.id,
                 caption: el.querySelector('.caption-text').textContent,
