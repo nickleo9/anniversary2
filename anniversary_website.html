@@ -1721,9 +1721,20 @@
             photoItem.id = photo.id;
 
             // 判斷是新格式(Google Drive)還是舊格式(Base64)
-            const imageUrl = photo.imageUrl || photo.imageData;
+            let imageUrl = photo.imageUrl || photo.imageData;
             const isGoogleDrivePhoto = photo.imageUrl && photo.driveFileId;
             const caption = photo.caption || '我們的回憶';
+
+            // 修正 Google Drive URL 格式
+            if (imageUrl && imageUrl.includes('drive.google.com')) {
+                // 從 URL 中提取檔案 ID
+                const fileIdMatch = imageUrl.match(/[?&]id=([^&]+)/);
+                if (fileIdMatch) {
+                    const fileId = fileIdMatch[1];
+                    // 使用更穩定的 URL 格式
+                    imageUrl = `https://drive.google.com/uc?id=${fileId}`;
+                }
+            }
 
             photoItem.innerHTML = `
                 <div class="photo-loading">載入中...</div>
@@ -1743,19 +1754,53 @@
                 const img = document.createElement('img');
                 img.src = imageUrl;
                 img.alt = caption;
+                img.crossOrigin = 'anonymous'; // 處理跨域問題
+                
                 img.onload = () => {
                     const loadingDiv = photoItem.querySelector('.photo-loading');
                     if (loadingDiv) {
                         loadingDiv.remove();
                     }
                     photoItem.prepend(img);
+                    console.log('✅ 照片載入成功:', photo.id);
                 };
+                
                 img.onerror = () => {
-                    const loadingDiv = photoItem.querySelector('.photo-loading');
-                    if (loadingDiv) {
-                        loadingDiv.textContent = '載入失敗';
+                    console.error('❌ 照片載入失敗:', photo.id, imageUrl);
+                    
+                    // 嘗試備用 URL 格式
+                    if (imageUrl.includes('drive.google.com') && photo.driveFileId) {
+                        console.log('🔄 嘗試備用 URL 格式...');
+                        const backupUrl = `https://drive.google.com/thumbnail?id=${photo.driveFileId}&sz=w1000`;
+                        img.src = backupUrl;
+                        
+                        img.onerror = () => {
+                            const loadingDiv = photoItem.querySelector('.photo-loading');
+                            if (loadingDiv) {
+                                loadingDiv.innerHTML = `
+                                    <div style="padding: 20px; text-align: center; color: #666;">
+                                        <div>📸 照片載入失敗</div>
+                                        <div style="font-size: 12px; margin-top: 5px;">
+                                            <button onclick="retryLoadPhoto('${photo.id}', '${imageUrl}')" style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">重試</button>
+                                            <button onclick="openInDrive('${photo.driveFileId}')" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-left: 5px;">在 Drive 中開啟</button>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                        };
+                    } else {
+                        const loadingDiv = photoItem.querySelector('.photo-loading');
+                        if (loadingDiv) {
+                            loadingDiv.innerHTML = `
+                                <div style="padding: 20px; text-align: center; color: #666;">
+                                    <div>📸 照片載入失敗</div>
+                                    <div style="font-size: 12px; margin-top: 5px;">
+                                        <button onclick="retryLoadPhoto('${photo.id}', '${imageUrl}')" style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">重試</button>
+                                    </div>
+                                </div>
+                            `;
+                        }
                     }
-                    console.error('照片載入失敗:', photo.id, imageUrl);
                 };
             } else {
                 photoItem.querySelector('.photo-loading').textContent = '無圖片資料';
@@ -1770,7 +1815,53 @@
             window.open(driveUrl, '_blank');
         };
 
-        // 9. 刪除照片 - 支援 Google Drive
+        // 9. 重試載入照片
+        window.retryLoadPhoto = function(photoId, imageUrl) {
+            console.log('🔄 重試載入照片:', photoId, imageUrl);
+            
+            const photoItem = document.getElementById(photoId);
+            if (!photoItem) return;
+            
+            const loadingDiv = photoItem.querySelector('.photo-loading');
+            if (loadingDiv) {
+                loadingDiv.innerHTML = '🔄 重新載入中...';
+            }
+            
+            // 重新建立圖片元素
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = photoItem.querySelector('.caption-text').textContent;
+            img.crossOrigin = 'anonymous';
+            
+            img.onload = () => {
+                if (loadingDiv) {
+                    loadingDiv.remove();
+                }
+                // 移除舊的圖片（如果有）
+                const oldImg = photoItem.querySelector('img');
+                if (oldImg) {
+                    oldImg.remove();
+                }
+                photoItem.prepend(img);
+                console.log('✅ 照片重新載入成功:', photoId);
+            };
+            
+            img.onerror = () => {
+                if (loadingDiv) {
+                    loadingDiv.innerHTML = `
+                        <div style="padding: 20px; text-align: center; color: #666;">
+                            <div>📸 照片載入失敗</div>
+                            <div style="font-size: 12px; margin-top: 5px;">
+                                <button onclick="retryLoadPhoto('${photoId}', '${imageUrl}')" style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">再試一次</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                console.error('❌ 照片重新載入仍然失敗:', photoId, imageUrl);
+            };
+        };
+
+        // 10. 刪除照片 - 支援 Google Drive
         window.deletePhoto = async function(photoId) {
             if (!confirm('確定要刪除這張照片嗎？此操作將同時刪除 Google Drive 中的檔案。')) return;
 
@@ -1783,7 +1874,7 @@
             }
         };
 
-        // 10. 其他現有函式保持不變...
+        // 11. 其他現有函式保持不變...
         async function addLoveMessage() {
             const messageInput = document.getElementById('messageInput');
             const messageText = messageInput.value.trim();
@@ -1871,7 +1962,7 @@
             }
         }
 
-        // 11. 剩餘的輔助函式...
+        // 12. 剩餘的輔助函式...
         function createTimelineItemElement(item) {
             if (!item || !item.id) {
                 console.error('時間軸項目資料無效:', item);
@@ -2161,7 +2252,7 @@
             setTimeout(() => heart.remove(), 6000);
         }
 
-        // 12. 備份功能
+        // 13. 備份功能
         function collectCurrentPageData() {
             const timeline = Array.from(document.querySelectorAll('.timeline-item[data-id]')).map(el => ({
                 id: el.dataset.id,
@@ -2224,7 +2315,7 @@
             event.target.value = '';
         }
 
-        // 13. 最終執行
+        // 14. 最終執行
         window.addEventListener('load', init);
     </script>
 </body>
