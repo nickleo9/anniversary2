@@ -1064,50 +1064,58 @@
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
-        /* 響應式設計 */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .time-display {
-                gap: 10px;
-            }
-            
-            .time-unit {
-                min-width: 60px;
-                padding: 15px;
-            }
-            
-            .special-btn {
-                padding: 15px 30px;
-                font-size: 1rem;
-            }
-            
-            .timeline::after {
-                left: 31px;
-            }
-            
-            .timeline-item {
-                width: 100%;
-                padding-left: 70px;
-                padding-right: 25px;
-            }
-            
-            .timeline-item:nth-child(odd) {
-                left: 0;
-                transform: none;
-            }
-            
-            .timeline-item:nth-child(even) {
-                left: 0;
-                transform: none;
-            }
-            
-            .timeline-item::after {
-                left: 15px;
-            }
-        }
+/* 響應式設計 - 優化版本 */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .time-display {
+        gap: 10px;
+    }
+    
+    .time-unit {
+        min-width: 60px;
+        padding: 15px;
+    }
+    
+    .special-btn {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+    
+    /* --- 時間軸優化開始 --- */
+    
+    /* 1. 將垂直線移到左側固定位置 */
+    .timeline::after {
+        left: 31px; /* 垂直線距離左邊 31px */
+    }
+    
+    /* 2. 統一處理所有時間軸項目，不再區分奇偶 */
+    .timeline-item,
+    .timeline-item:nth-child(odd),
+    .timeline-item:nth-child(even) {
+        width: 100%;        /* 寬度佔滿 */
+        left: 0;            /* 從最左邊開始排列 */
+        transform: none;    /* 清除所有位移效果 */
+        padding-left: 70px; /* 左邊留出空間給時間點和線 */
+        padding-right: 25px;/* 右邊保留一些間距 */
+    }
+    
+    /* 3. 精準定位時間點的圓圈，使其中心與垂直線的中心完美對齊 */
+    .timeline-item::after {
+        /*
+         * 計算方式:
+         * 垂直線的 left (31px) - 垂直線寬度一半 (6px/2) = 垂直線中心 (28px)
+         * 我們要讓圓點的中心也對齊在 28px 的位置
+         * 所以圓點的 left = 垂直線中心 (28px) - 圓點寬度一半 (25px/2) = 15.5px
+         * 這裡使用 16px 效果最好
+         */
+        left: 16px; 
+    }
+    
+    /* --- 時間軸優化結束 --- */
+}
     </style>
 </head>
 <body>
