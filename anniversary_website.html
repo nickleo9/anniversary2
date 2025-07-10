@@ -568,9 +568,140 @@
             border-color: #764ba2;
         }
 
+        .edit-input[type="date"] {
+            padding: 10px 8px;
+            color: #333;
+            background: white;
+        }
+
+        .edit-input[type="date"]::-webkit-calendar-picker-indicator {
+            background: #764ba2;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
         .edit-btn-group {
             text-align: right;
             margin-top: 10px;
+        }
+
+        .edit-save-btn, .edit-cancel-btn {
+            padding: 6px 12px;
+            margin-left: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-save-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .edit-save-btn:hover {
+            background: #218838;
+        }
+
+        .edit-cancel-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .edit-cancel-btn:hover {
+            background: #5a6268;
+        }
+
+        /* 新增時間軸彈窗 */
+        .add-timeline-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            z-index: 1001;
+            max-width: 500px;
+            width: 90%;
+            transition: transform 0.3s ease;
+        }
+
+        .add-timeline-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .add-timeline-popup h3 {
+            color: #764ba2;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .popup-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .popup-input:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+
+        .popup-input[type="date"] {
+            padding: 12px;
+            color: #333;
+            background: white;
+        }
+
+        .popup-input[type="date"]::-webkit-calendar-picker-indicator {
+            background: #764ba2;
+            border-radius: 3px;
+            cursor: pointer;
+            padding: 2px;
+        }
+
+        .popup-btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .popup-save-btn, .popup-cancel-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .popup-save-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .popup-save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .popup-cancel-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .popup-cancel-btn:hover {
+            background: #5a6268;
         }
 
         .edit-save-btn, .edit-cancel-btn {
@@ -1061,7 +1192,7 @@
                     <div class="timeline-edit-form" id="edit_timeline_1">
                         <input type="text" class="edit-input" id="edit_title_timeline_1" placeholder="回憶標題">
                         <textarea class="edit-input" id="edit_content_timeline_1" placeholder="回憶內容" rows="3"></textarea>
-                        <input type="text" class="edit-input" id="edit_date_timeline_1" placeholder="日期">
+                        <input type="date" class="edit-input" id="edit_date_timeline_1">
                         <div class="edit-btn-group">
                             <button class="edit-save-btn" onclick="saveTimelineEdit('timeline_1')">💾 保存</button>
                             <button class="edit-cancel-btn" onclick="cancelTimelineEdit('timeline_1')">❌ 取消</button>
@@ -1082,7 +1213,7 @@
                     <div class="timeline-edit-form" id="edit_timeline_2">
                         <input type="text" class="edit-input" id="edit_title_timeline_2" placeholder="回憶標題">
                         <textarea class="edit-input" id="edit_content_timeline_2" placeholder="回憶內容" rows="3"></textarea>
-                        <input type="text" class="edit-input" id="edit_date_timeline_2" placeholder="日期">
+                        <input type="date" class="edit-input" id="edit_date_timeline_2">
                         <div class="edit-btn-group">
                             <button class="edit-save-btn" onclick="saveTimelineEdit('timeline_2')">💾 保存</button>
                             <button class="edit-cancel-btn" onclick="cancelTimelineEdit('timeline_2')">❌ 取消</button>
@@ -1103,7 +1234,7 @@
                     <div class="timeline-edit-form" id="edit_timeline_3">
                         <input type="text" class="edit-input" id="edit_title_timeline_3" placeholder="回憶標題">
                         <textarea class="edit-input" id="edit_content_timeline_3" placeholder="回憶內容" rows="3"></textarea>
-                        <input type="text" class="edit-input" id="edit_date_timeline_3" placeholder="日期">
+                        <input type="date" class="edit-input" id="edit_date_timeline_3">
                         <div class="edit-btn-group">
                             <button class="edit-save-btn" onclick="saveTimelineEdit('timeline_3')">💾 保存</button>
                             <button class="edit-cancel-btn" onclick="cancelTimelineEdit('timeline_3')">❌ 取消</button>
@@ -1124,7 +1255,7 @@
                     <div class="timeline-edit-form" id="edit_timeline_4">
                         <input type="text" class="edit-input" id="edit_title_timeline_4" placeholder="回憶標題">
                         <textarea class="edit-input" id="edit_content_timeline_4" placeholder="回憶內容" rows="3"></textarea>
-                        <input type="text" class="edit-input" id="edit_date_timeline_4" placeholder="日期">
+                        <input type="date" class="edit-input" id="edit_date_timeline_4">
                         <div class="edit-btn-group">
                             <button class="edit-save-btn" onclick="saveTimelineEdit('timeline_4')">💾 保存</button>
                             <button class="edit-cancel-btn" onclick="cancelTimelineEdit('timeline_4')">❌ 取消</button>
@@ -1231,6 +1362,22 @@
         </div>
     </div>
 
+    <!-- 新增時間軸彈窗 -->
+    <div class="overlay" id="addTimelineOverlay" onclick="hideAddTimelinePopup()" style="z-index: 1000;"></div>
+    <div class="add-timeline-popup" id="addTimelinePopup">
+        <h3>📅 新增美好回憶</h3>
+        <input type="text" class="popup-input" id="newTimelineTitle" placeholder="回憶標題（例如：第一次見面）">
+        <textarea class="popup-input" id="newTimelineContent" placeholder="回憶內容描述..." rows="4"></textarea>
+        <input type="date" class="popup-input" id="newTimelineDate">
+        <div style="text-align: center; font-size: 12px; color: #666; margin: 10px 0;">
+            ⌨️ 快捷鍵：Ctrl+Enter 保存，Escape 取消
+        </div>
+        <div class="popup-btn-group">
+            <button class="popup-save-btn" onclick="saveNewTimelineItem()">💕 保存回憶</button>
+            <button class="popup-cancel-btn" onclick="hideAddTimelinePopup()">❌ 取消</button>
+        </div>
+    </div>
+
     <!-- 訊息彈窗 -->
     <div class="overlay" id="overlay" onclick="hideMessage()"></div>
     <div class="message-popup" id="messagePopup">
@@ -1241,7 +1388,7 @@
 
     <script>
         // 在一起的日期 (請修改為你們的紀念日)
-        const anniversaryDate = new Date('2023-01-01');
+        const anniversaryDate = new Date('2023-07-12');
         
         // 愛情測試題目
         const loveQuestions = [
@@ -1561,6 +1708,88 @@
 
         // === 時間軸編輯功能 ===
         
+        // 日期格式轉換函數
+        function formatDateForDisplay(dateInput) {
+            if (!dateInput) return '';
+            
+            // 如果是 YYYY-MM-DD 格式，轉換為友好的顯示格式
+            if (dateInput.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                const date = new Date(dateInput);
+                return date.toLocaleDateString('zh-TW', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+            
+            // 如果是中文日期格式，嘗試解析並轉換
+            if (dateInput.includes('年') || dateInput.includes('月') || dateInput.includes('日')) {
+                // 提取年月日數字
+                const yearMatch = dateInput.match(/(\d{4})年/);
+                const monthMatch = dateInput.match(/(\d{1,2})月/);
+                const dayMatch = dateInput.match(/(\d{1,2})日/);
+                
+                if (yearMatch && monthMatch && dayMatch) {
+                    const year = yearMatch[1];
+                    const month = monthMatch[1].padStart(2, '0');
+                    const day = dayMatch[1].padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                }
+            }
+            
+            return dateInput;
+        }
+        
+        function formatDateFromInput(dateValue) {
+            if (!dateValue) return '';
+            
+            try {
+                const date = new Date(dateValue);
+                return date.toLocaleDateString('zh-TW', {
+                    year: 'numeric',
+                    month: 'long', 
+                    day: 'numeric'
+                });
+            } catch (error) {
+                return dateValue;
+            }
+        }
+        
+        function convertToDateInput(displayDate) {
+            if (!displayDate) return '';
+            
+            // 如果已經是 YYYY-MM-DD 格式，直接返回
+            if (displayDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                return displayDate;
+            }
+            
+            // 解析中文日期格式
+            if (displayDate.includes('年')) {
+                const yearMatch = displayDate.match(/(\d{4})年/);
+                const monthMatch = displayDate.match(/(\d{1,2})月/);
+                const dayMatch = displayDate.match(/(\d{1,2})日/);
+                
+                if (yearMatch && monthMatch && dayMatch) {
+                    const year = yearMatch[1];
+                    const month = monthMatch[1].padStart(2, '0');
+                    const day = dayMatch[1].padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                }
+            }
+            
+            // 嘗試其他格式解析
+            try {
+                const date = new Date(displayDate);
+                if (!isNaN(date.getTime())) {
+                    return date.toISOString().split('T')[0];
+                }
+            } catch (error) {
+                console.log('日期解析失敗:', displayDate);
+            }
+            
+            return '';
+        }
+        
         // 編輯時間軸項目
         window.editTimelineItem = function(itemId) {
             console.log('✏️ 編輯時間軸項目:', itemId);
@@ -1571,17 +1800,20 @@
             // 獲取當前內容
             const title = timelineItem.querySelector('h4').textContent;
             const content = timelineItem.querySelector('p').textContent;
-            const date = timelineItem.querySelector('small').textContent;
+            const dateText = timelineItem.querySelector('small').textContent;
             
             // 填入編輯表單
             document.getElementById(`edit_title_${itemId}`).value = title;
             document.getElementById(`edit_content_${itemId}`).value = content;
-            document.getElementById(`edit_date_${itemId}`).value = date;
+            
+            // 轉換日期格式給日期選擇器
+            const dateInputValue = convertToDateInput(dateText);
+            document.getElementById(`edit_date_${itemId}`).value = dateInputValue;
             
             // 顯示編輯表單
             document.getElementById(`edit_${itemId}`).classList.add('editing');
             
-            console.log('📝 進入時間軸編輯模式:', title);
+            console.log('📝 進入時間軸編輯模式:', title, '| 日期:', dateText, '→', dateInputValue);
         };
         
         // 保存時間軸編輯
@@ -1594,17 +1826,20 @@
             // 獲取新內容
             const newTitle = document.getElementById(`edit_title_${itemId}`).value.trim();
             const newContent = document.getElementById(`edit_content_${itemId}`).value.trim();
-            const newDate = document.getElementById(`edit_date_${itemId}`).value.trim();
+            const newDateValue = document.getElementById(`edit_date_${itemId}`).value;
             
-            if (!newTitle || !newContent || !newDate) {
+            if (!newTitle || !newContent || !newDateValue) {
                 alert('請填寫完整的回憶資訊！');
                 return;
             }
             
+            // 格式化日期顯示
+            const formattedDate = formatDateFromInput(newDateValue);
+            
             // 更新顯示內容
             timelineItem.querySelector('h4').textContent = newTitle;
             timelineItem.querySelector('p').textContent = newContent;
-            timelineItem.querySelector('small').textContent = newDate;
+            timelineItem.querySelector('small').textContent = formattedDate;
             
             // 隱藏編輯表單
             document.getElementById(`edit_${itemId}`).classList.remove('editing');
@@ -1615,7 +1850,7 @@
                 timelineItem.style.background = 'rgba(255, 255, 255, 0.9)';
             }, 1000);
             
-            console.log('✅ 時間軸項目已更新:', newTitle);
+            console.log('✅ 時間軸項目已更新:', newTitle, '| 日期:', formattedDate);
             
             // 保存到數據
             saveMemoriesData();
@@ -1652,22 +1887,56 @@
             }
         };
         
-        // 新增時間軸項目
+        // 新增時間軸項目 - 使用彈窗
         window.addNewTimelineItem = function() {
-            console.log('➕ 新增時間軸項目');
+            console.log('➕ 顯示新增時間軸彈窗');
             
-            const title = prompt('請輸入回憶標題：');
-            if (!title || !title.trim()) return;
+            // 清空表單
+            document.getElementById('newTimelineTitle').value = '';
+            document.getElementById('newTimelineContent').value = '';
+            document.getElementById('newTimelineDate').value = '';
             
-            const content = prompt('請輸入回憶內容：');
-            if (!content || !content.trim()) return;
+            // 設置預設日期為今天
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('newTimelineDate').value = today;
             
-            const date = prompt('請輸入日期（例如：2024年7月10日）：');
-            if (!date || !date.trim()) return;
+            // 顯示彈窗
+            document.getElementById('addTimelineOverlay').classList.add('show');
+            document.getElementById('addTimelinePopup').classList.add('show');
+            
+            // 聚焦到標題輸入框
+            setTimeout(() => {
+                document.getElementById('newTimelineTitle').focus();
+            }, 300);
+        };
+        
+        // 隱藏新增時間軸彈窗
+        window.hideAddTimelinePopup = function() {
+            console.log('❌ 隱藏新增時間軸彈窗');
+            
+            document.getElementById('addTimelineOverlay').classList.remove('show');
+            document.getElementById('addTimelinePopup').classList.remove('show');
+        };
+        
+        // 保存新的時間軸項目
+        window.saveNewTimelineItem = function() {
+            console.log('💾 保存新的時間軸項目');
+            
+            const title = document.getElementById('newTimelineTitle').value.trim();
+            const content = document.getElementById('newTimelineContent').value.trim();
+            const dateValue = document.getElementById('newTimelineDate').value;
+            
+            if (!title || !content || !dateValue) {
+                alert('請填寫完整的回憶資訊！');
+                return;
+            }
             
             const timeline = document.getElementById('timeline');
             const newItemId = `timeline_${timelineCounter}`;
             timelineCounter++;
+            
+            // 格式化日期顯示
+            const formattedDate = formatDateFromInput(dateValue);
             
             // 創建新的時間軸項目
             const newItem = document.createElement('div');
@@ -1679,15 +1948,15 @@
                     <button class="timeline-control-btn" onclick="editTimelineItem('${newItemId}')" title="編輯">✏️</button>
                     <button class="timeline-control-btn delete-btn" onclick="deleteTimelineItem('${newItemId}')" title="刪除">🗑️</button>
                 </div>
-                <h4>${title.trim()}</h4>
-                <p>${content.trim()}</p>
-                <small>${date.trim()}</small>
+                <h4>${title}</h4>
+                <p>${content}</p>
+                <small>${formattedDate}</small>
                 
                 <!-- 編輯表單 -->
                 <div class="timeline-edit-form" id="edit_${newItemId}">
                     <input type="text" class="edit-input" id="edit_title_${newItemId}" placeholder="回憶標題">
                     <textarea class="edit-input" id="edit_content_${newItemId}" placeholder="回憶內容" rows="3"></textarea>
-                    <input type="text" class="edit-input" id="edit_date_${newItemId}" placeholder="日期">
+                    <input type="date" class="edit-input" id="edit_date_${newItemId}">
                     <div class="edit-btn-group">
                         <button class="edit-save-btn" onclick="saveTimelineEdit('${newItemId}')">💾 保存</button>
                         <button class="edit-cancel-btn" onclick="cancelTimelineEdit('${newItemId}')">❌ 取消</button>
@@ -1716,8 +1985,16 @@
                 }, 1000);
             }, 600);
             
-            console.log('✅ 新增時間軸項目成功:', title);
+            // 隱藏彈窗
+            hideAddTimelinePopup();
+            
+            console.log('✅ 新增時間軸項目成功:', title, '| 日期:', formattedDate);
             saveMemoriesData();
+            
+            // 滾動到新項目
+            setTimeout(() => {
+                newItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 800);
         };
 
         // === 留言板刪除功能 ===
@@ -2192,6 +2469,9 @@
             // 初始化音樂控制
             initMusicControl();
             
+            // 初始化日期選擇器預設值
+            initializeDateInputs();
+            
             // 創建初始愛心
             for (let i = 0; i < 5; i++) {
                 setTimeout(createFloatingHeart, i * 400);
@@ -2200,10 +2480,11 @@
             console.log('✅ 週年紀念網站初始化完成！');
             console.log('🎵 音樂檔案設定為: "let me take of you.mp3"');
             console.log('✨ 新功能：時間軸編輯和留言刪除');
+            console.log('📅 增強功能：日期選擇器取代文字輸入');
             console.log('🛠️ 增強功能說明：');
-            console.log('   📅 時間軸：hover顯示編輯/刪除按鈕');
+            console.log('   📅 時間軸：hover顯示編輯/刪除按鈕，使用日期選擇器');
             console.log('   💌 留言板：hover顯示刪除按鈕');
-            console.log('   ➕ 可新增自定義時間軸項目');
+            console.log('   ➕ 可新增自定義時間軸項目（彈窗表單）');
             
             // 顯示歡迎訊息
             setTimeout(() => {
@@ -2212,8 +2493,52 @@
                 console.log('   • 滑鼠移到時間軸項目上可編輯/刪除');
                 console.log('   • 滑鼠移到留言上可刪除');
                 console.log('   • 點擊「新增美好回憶」可添加時間軸');
+                console.log('   • 使用日期選擇器更方便選擇日期');
                 console.log('   • 所有修改都會自動保存');
+                console.log('⌨️ 鍵盤快捷鍵：');
+                console.log('   • 在新增回憶彈窗中：Ctrl+Enter 保存，Escape 取消');
             }, 2000);
+        }
+        
+        // 初始化日期輸入框
+        function initializeDateInputs() {
+            console.log('📅 初始化日期選擇器...');
+            
+            // 為現有的時間軸項目設置日期輸入預設值
+            const timelineItems = [
+                { id: 'timeline_1', date: '2023-01-01' },
+                { id: 'timeline_2', date: '2023-01-15' },
+                { id: 'timeline_3', date: '2023-02-14' },
+                { id: 'timeline_4', date: '2023-05-01' }
+            ];
+            
+            timelineItems.forEach(item => {
+                const dateInput = document.getElementById(`edit_date_${item.id}`);
+                if (dateInput) {
+                    dateInput.value = item.date;
+                    console.log(`📅 設置 ${item.id} 日期預設值:`, item.date);
+                }
+            });
+            
+            // 添加鍵盤事件監聽器
+            document.addEventListener('keydown', function(event) {
+                // 檢查是否在新增時間軸彈窗中
+                const popup = document.getElementById('addTimelinePopup');
+                if (popup && popup.classList.contains('show')) {
+                    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+                        // Ctrl+Enter 或 Cmd+Enter 保存
+                        event.preventDefault();
+                        saveNewTimelineItem();
+                    } else if (event.key === 'Escape') {
+                        // Escape 取消
+                        event.preventDefault();
+                        hideAddTimelinePopup();
+                    }
+                }
+            });
+            
+            console.log('✅ 日期選擇器初始化完成');
+            console.log('⌨️ 鍵盤快捷鍵已啟用: Ctrl+Enter=保存, Escape=取消');
         }
 
         // 頁面載入完成後初始化
