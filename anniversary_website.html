@@ -7,7 +7,6 @@
     
     <!-- Favicon 設定 -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgo8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjNjY3ZWVhIi8+CjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzc2NGJhMiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcng9IjgiIGZpbGw9InVybCgjZ3JhZGllbnQpIi8+Cjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSI+💕PC90ZXh0Pgo8L3N2Zz4K">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzY2N2VlYSIvPgo8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM3NjRiYTIiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgo8dGV4dCB4PSI5MCIgeT0iMTEwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNjAiIGZpbGw9IndoaXRlIj7wn5KVPC90ZXh0Pgo8L3N2Zz4K">
     
     <!-- PWA 支援 -->
     <meta name="theme-color" content="#764ba2">
@@ -158,81 +157,6 @@
             50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4); }
         }
 
-        /* 音樂視覺化指示器 */
-        .music-visualizer {
-            display: none;
-            align-items: center;
-            gap: 2px;
-        }
-
-        .music-control.playing .music-visualizer {
-            display: flex;
-        }
-
-        .music-bar {
-            width: 3px;
-            background: white;
-            border-radius: 2px;
-            animation: musicBar 0.8s infinite;
-        }
-
-        .music-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
-        .music-bar:nth-child(2) { height: 12px; animation-delay: 0.1s; }
-        .music-bar:nth-child(3) { height: 6px; animation-delay: 0.2s; }
-        .music-bar:nth-child(4) { height: 10px; animation-delay: 0.3s; }
-
-        @keyframes musicBar {
-            0%, 100% { height: 4px; }
-            50% { height: 15px; }
-        }
-
-        /* 音量控制 */
-        .volume-control {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            padding: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            display: none;
-            align-items: center;
-            gap: 10px;
-            min-width: 150px;
-        }
-
-        .volume-control.show {
-            display: flex;
-        }
-
-        .volume-slider {
-            flex: 1;
-            height: 5px;
-            background: #ddd;
-            border-radius: 5px;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 15px;
-            height: 15px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .volume-slider::-moz-range-thumb {
-            width: 15px;
-            height: 15px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-        }
-
         /* 標題區域 */
         .header {
             text-align: center;
@@ -338,11 +262,72 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
         }
 
         .upload-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .upload-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 上傳進度指示器 */
+        .upload-progress {
+            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .upload-progress.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .upload-info {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .upload-info h4 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .upload-info ul {
+            margin-left: 20px;
+            color: #0066cc;
+        }
+
+        .upload-info li {
+            margin-bottom: 5px;
         }
 
         /* 照片畫廊 */
@@ -427,6 +412,27 @@
 
         .photo-control-btn.edit-btn:hover {
             background: rgba(0, 123, 255, 0.8);
+        }
+
+        /* 照片載入中狀態 */
+        .photo-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .photo-loading::before {
+            content: '📸';
+            margin-right: 8px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* 照片標題編輯 */
@@ -576,18 +582,6 @@
             border-color: #764ba2;
         }
 
-        .edit-input[type="date"] {
-            padding: 10px 8px;
-            color: #333;
-            background: white;
-        }
-
-        .edit-input[type="date"]::-webkit-calendar-picker-indicator {
-            background: #764ba2;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
         .edit-btn-group {
             text-align: right;
             margin-top: 10px;
@@ -664,19 +658,6 @@
             border-color: #764ba2;
         }
 
-        .popup-input[type="date"] {
-            padding: 12px;
-            color: #333;
-            background: white;
-        }
-
-        .popup-input[type="date"]::-webkit-calendar-picker-indicator {
-            background: #764ba2;
-            border-radius: 3px;
-            cursor: pointer;
-            padding: 2px;
-        }
-
         .popup-btn-group {
             display: flex;
             gap: 10px;
@@ -710,45 +691,6 @@
 
         .popup-cancel-btn:hover {
             background: #5a6268;
-        }
-
-        .edit-save-btn, .edit-cancel-btn {
-            padding: 6px 12px;
-            margin-left: 5px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .edit-save-btn {
-            background: #28a745;
-            color: white;
-        }
-
-        .edit-save-btn:hover {
-            background: #218838;
-        }
-
-        .edit-cancel-btn {
-            background: #6c757d;
-            color: white;
-        }
-
-        .edit-cancel-btn:hover {
-            background: #5a6268;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         /* 愛情測試遊戲 */
@@ -1025,6 +967,17 @@
             }
         }
 
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* 新增時間軸項目按鈕 */
         .add-timeline-btn {
             background: linear-gradient(135deg, #28a745, #20c997);
@@ -1059,42 +1012,6 @@
             display: inline-block;
         }
 
-        /* 🔧 確保重要元素不會被覆蓋 */
-        .timeline-item {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .timeline-edit-form {
-            position: relative;
-            z-index: 10;
-        }
-        
-        /* 🔧 手機觸控優化 */
-        @media (max-width: 768px) {
-            /* 增加觸控目標大小 */
-            .timeline-control-btn,
-            .photo-control-btn,
-            .message-delete-btn {
-                min-width: 44px;
-                min-height: 44px;
-                font-size: 16px;
-            }
-            
-            /* 防止誤觸 */
-            .timeline-controls,
-            .photo-controls {
-                opacity: 1; /* 手機上始終顯示，避免 hover 問題 */
-                background: rgba(0,0,0,0.1);
-                border-radius: 5px;
-                padding: 2px;
-            }
-            
-            .message-delete-btn {
-                opacity: 1; /* 手機上始終顯示 */
-            }
-        }
-
         /* 響應式設計 */
         @media (max-width: 768px) {
             .header h1 {
@@ -1116,7 +1033,6 @@
                 margin: 5px;
             }
             
-            /* 🔧 修復時間軸手機版佈局 */
             .timeline::after {
                 left: 31px;
             }
@@ -1144,7 +1060,6 @@
                 left: 15px !important;
             }
             
-            /* 🔧 修復按鈕在手機上的顯示 */
             .add-timeline-btn,
             .sort-timeline-btn {
                 padding: 12px 20px;
@@ -1155,13 +1070,6 @@
                 max-width: 280px;
             }
             
-            /* 🔧 按鈕容器在手機上的調整 */
-            .card h3 + div {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            /* 🔧 修復彈窗在手機上的顯示 */
             .add-timeline-popup {
                 width: 95%;
                 padding: 20px;
@@ -1170,7 +1078,7 @@
             
             .popup-input {
                 padding: 15px;
-                font-size: 16px; /* 防止iOS縮放 */
+                font-size: 16px;
             }
             
             .popup-btn-group {
@@ -1184,10 +1092,9 @@
                 padding: 15px;
             }
             
-            /* 🔧 修復編輯表單在手機上的顯示 */
             .edit-input {
                 padding: 12px;
-                font-size: 16px; /* 防止iOS縮放 */
+                font-size: 16px;
             }
             
             .edit-btn-group {
@@ -1201,7 +1108,6 @@
                 margin: 5px;
             }
             
-            /* 🔧 修復時間軸控制按鈕 */
             .timeline-controls {
                 top: 5px;
                 right: 5px;
@@ -1213,7 +1119,6 @@
                 font-size: 12px;
             }
             
-            /* 🔧 修復留言刪除按鈕 */
             .message-delete-btn {
                 width: 30px;
                 height: 30px;
@@ -1222,13 +1127,11 @@
                 right: 5px;
             }
             
-            /* 🔧 確保圖片不會超出螢幕 */
             .photo-gallery {
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
                 gap: 15px;
             }
             
-            /* 🔧 修復容器邊距 */
             .container {
                 padding: 15px;
             }
@@ -1238,8 +1141,6 @@
                 margin-bottom: 20px;
             }
             
-            /* 🔧 手機觸控優化 */
-            /* 增加觸控目標大小 */
             .timeline-control-btn,
             .photo-control-btn,
             .message-delete-btn {
@@ -1248,21 +1149,19 @@
                 font-size: 16px;
             }
             
-            /* 防止誤觸 - 手機上始終顯示控制按鈕 */
             .timeline-controls,
             .photo-controls {
-                opacity: 1 !important; /* 手機上始終顯示，避免 hover 問題 */
+                opacity: 1 !important;
                 background: rgba(0,0,0,0.1);
                 border-radius: 5px;
                 padding: 2px;
             }
             
             .message-delete-btn {
-                opacity: 1 !important; /* 手機上始終顯示 */
+                opacity: 1 !important;
             }
         }
 
-        /* 🔧 超小螢幕優化 (小於480px) */
         @media (max-width: 480px) {
             .header h1 {
                 font-size: 1.8rem;
@@ -1314,19 +1213,6 @@
     <div class="music-control" id="musicControl" onclick="toggleMusic()">
         <span id="musicIcon">🎵</span>
         <span id="musicText">播放音樂</span>
-        <div class="music-visualizer">
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-        </div>
-    </div>
-    
-    <!-- 音量控制器 -->
-    <div class="volume-control" id="volumeControl">
-        <span>🔊</span>
-        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50">
-        <span id="volumeValue">50%</span>
     </div>
     
     <!-- 隱藏的音樂播放器 -->
@@ -1391,7 +1277,7 @@
             </div>
         </div>
 
-        <!-- 回憶時間軸 - 增強版 -->
+        <!-- 回憶時間軸 -->
         <div class="card">
             <h3 style="color: #764ba2; text-align: center; margin-bottom: 30px;">📅 我們的回憶時間軸</h3>
             <div style="text-align: center; margin-bottom: 20px;">
@@ -1403,45 +1289,54 @@
             </div>
         </div>
 
-        <!-- 照片上傳區域 -->
+        <!-- 照片上傳區域 - 升級版 -->
         <div class="card">
             <div class="photo-upload">
                 <h3 style="color: #764ba2; margin-bottom: 20px;">📸 上傳我們的回憶照片</h3>
+                
+                <!-- 新增功能說明 -->
+                <div class="upload-info">
+                    <h4>🚀 全新升級！照片上傳到 Google Drive</h4>
+                    <ul>
+                        <li>✅ <strong>無大小限制</strong> - 可上傳高解析度照片</li>
+                        <li>✅ <strong>自動雲端備份</strong> - 安全儲存在你的 Google Drive</li>
+                        <li>✅ <strong>快速載入</strong> - 優化的顯示效果</li>
+                        <li>✅ <strong>專用資料夾</strong> - 自動整理在「我們的回憶照片」資料夾</li>
+                    </ul>
+                </div>
+                
                 <input type="file" id="photoInput" accept="image/*" multiple style="display: none;">
-                <button class="upload-btn" onclick="document.getElementById('photoInput').click()">
+                <button class="upload-btn" id="uploadBtn" onclick="document.getElementById('photoInput').click()">
                     📸 選擇照片
                 </button>
-            </div>
-            
-            <div class="photo-gallery" id="photoGallery">
-                <!-- 示例照片 -->
-                <div class="photo-item" id="sample_photo">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjNmNGY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNTBMNzUgMTAwSDEyNUwxMDAgNTBaIiBmaWxsPSIjZGRkZGRkIi8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iMzAiIGZpbGw9IiNkZGRkZGQiLz4KPHR3eHQgeD0iMTAwIiB5PSIxNzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM5OTk5OTkiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+5oiR5YCR55qE54Wn54mHPC90ZXh0Pgo8L3N2Zz4K" alt="我們的照片">
-                    <div class="photo-controls">
-                        <button class="photo-control-btn edit-btn" onclick="editCaption('sample_photo')" title="編輯標題">✏️</button>
-                        <button class="photo-control-btn" onclick="deletePhoto('sample_photo')" title="刪除照片">🗑️</button>
+                
+                <!-- 上傳進度顯示 -->
+                <div class="upload-progress" id="uploadProgress">
+                    <div style="font-weight: bold; color: #764ba2; margin-bottom: 10px;">
+                        <span id="uploadStatus">上傳中...</span>
                     </div>
-                    <div class="caption">
-                        <span class="caption-text">我們的第一張合照</span>
-                        <input class="caption-input" style="display: none;" onblur="saveCaptionEdit('sample_photo')" onkeypress="handleCaptionKeypress(event, 'sample_photo')">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="uploadProgressFill"></div>
+                    </div>
+                    <div id="uploadDetails" style="font-size: 14px; color: #666; margin-top: 5px;">
+                        正在處理照片...
                     </div>
                 </div>
             </div>
+            
+            <div class="photo-gallery" id="photoGallery">
+                <!-- 照片將在這裡動態生成 -->
+            </div>
         </div>
 
-        <!-- 留言板 - 增強版 -->
+        <!-- 留言板 -->
         <div class="card">
             <h3 style="color: #764ba2; margin-bottom: 20px;">💌 愛的留言板</h3>
             <div class="message-board">
                 <textarea class="message-input" id="messageInput" placeholder="寫下你想對她說的話..."></textarea>
                 <button class="upload-btn" onclick="addLoveMessage()">💕 發送愛意</button>
                 <div class="message-list" id="messageList">
-                    <!-- 示例留言 -->
-                    <div class="message-item" data-id="msg_sample">
-                        <button class="message-delete-btn" onclick="deleteMessage('msg_sample')" title="刪除留言">🗑️</button>
-                        <div class="message-date">2025年7月10日 14:30</div>
-                        <div>親愛的，感謝你陪伴我度過每一個美好的時光。你是我生命中最珍貴的禮物！💕</div>
-                    </div>
+                    <!-- 留言將在這裡動態生成 -->
                 </div>
             </div>
         </div>
@@ -1455,32 +1350,29 @@
         </div>
 
         <!-- 數據管理區域 -->
-<!-- 修改後的版本 -->
-<div class="card">
-    <h3 style="color: #764ba2; margin-bottom: 20px;">☁️ 雲端與備份管理</h3>
-    <div style="text-align: center; margin-bottom: 20px;">
-        <p style="color: #666; margin-bottom: 20px;">所有回憶都會自動同步到雲端，並在本地保留快照，支援離線瀏覽和手動備份。</p>
-        
-        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-            <button class="upload-btn" onclick="exportMemories()">
-                💾 導出備份檔案
-            </button>
-            <button class="upload-btn" onclick="document.getElementById('importInput').click()">
-                📂 導入備份 (僅預覽)
-            </button>
-        </div>
-        
-        <input type="file" id="importInput" accept=".json" style="display: none;" onchange="importMemories(event)">
-        
-        <div style="margin-top: 15px; font-size: 0.9rem; color: #888;">
-            <p>💡 <strong>運作方式：</strong></p>
-            <p>☁️ **雲端同步：** 所有修改都會即時存到 Google Sheets。</p>
-            <p>📱 **離線快照：** 即使沒網路，也能看到上次連線時的內容。</p>
-            <p>💾 **手動備份：** 可將「當前畫面」的內容導出成檔案，永久保存。</p>
-            <p>📂 **導入備份：** 可預覽備份檔內容，但不會影響雲端資料。</p>
-        </div>
-    </div>
-</div>
+        <div class="card">
+            <h3 style="color: #764ba2; margin-bottom: 20px;">☁️ 雲端與備份管理</h3>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <p style="color: #666; margin-bottom: 20px;">所有回憶都會自動同步到雲端，照片儲存在 Google Drive，並在本地保留快照。</p>
+                
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                    <button class="upload-btn" onclick="exportMemories()">
+                        💾 導出備份檔案
+                    </button>
+                    <button class="upload-btn" onclick="document.getElementById('importInput').click()">
+                        📂 導入備份 (僅預覽)
+                    </button>
+                </div>
+                
+                <input type="file" id="importInput" accept=".json" style="display: none;" onchange="importMemories(event)">
+                
+                <div style="margin-top: 15px; font-size: 0.9rem; color: #888;">
+                    <p>💡 <strong>運作方式：</strong></p>
+                    <p>☁️ <strong>雲端同步：</strong> 所有修改都會即時存到 Google Sheets。</p>
+                    <p>📸 <strong>照片存儲：</strong> 照片上傳到你的 Google Drive「我們的回憶照片」資料夾。</p>
+                    <p>📱 <strong>離線快照：</strong> 即使沒網路，也能看到上次連線時的內容。</p>
+                </div>
+            </div>
         </div>
 
         <!-- 互動按鈕 -->
@@ -1497,7 +1389,7 @@
     </div>
 
     <!-- 新增時間軸彈窗 -->
-    <div class="overlay" id="addTimelineOverlay" onclick="hideAddTimelinePopup()" style="z-index: 1000;"></div>
+    <div class="overlay" id="addTimelineOverlay" onclick="hideAddTimelinePopup()"></div>
     <div class="add-timeline-popup" id="addTimelinePopup">
         <h3>📅 新增美好回憶</h3>
         <input type="text" class="popup-input" id="newTimelineTitle" placeholder="回憶標題（例如：第一次見面）">
@@ -1520,599 +1412,749 @@
         <button class="close-btn" onclick="hideMessage()">關閉</button>
     </div>
 
-<!-- 把這個完整的 script 區塊貼到你原本的位置 -->
-<script>
-    // =======================================================
-    //   我們的週年紀念網站 - 雲端/本地 混合模式最終版
-    // =======================================================
+    <script>
+        // =======================================================
+        //   週年紀念網站 - 支援 Google Drive 照片上傳
+        // =======================================================
 
-    // 1. 全域常數與變數
-    // =======================================================
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwO0HMAkC-URgdNcV3O6COeNSl2eqKVNfepS0dU7ejPLThPEGEu32awGpYJSBsVjor/exec';
-    const anniversaryDate = new Date('2023-07-12');
-    const LOCAL_STORAGE_KEY = 'ourAnniversaryData'; // 本地儲存的鑰匙
+        // 1. 全域常數與變數
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMNI4mmcpoOhhaqjrA7CkJ7OsaivafHFDcO-XbRyeBfm82f4lhjJvoT6HSL03i9rkE/exec';
+        const anniversaryDate = new Date('2023-07-12');
+        const LOCAL_STORAGE_KEY = 'ourAnniversaryData';
 
-    const loveQuestions = [
-        { question: "你最喜歡我們一起做的事情是什麼？", options: ["一起看電影", "一起散步", "一起吃飯", "一起旅行"], answers: ["看電影讓我們更親近！", "散步時光最浪漫！", "一起吃飯最幸福！", "旅行讓我們更了解彼此！"] },
-        { question: "你認為我們的愛情像什麼？", options: ["溫暖的陽光", "浪漫的月亮", "燦爛的星星", "美麗的彩虹"], answers: ["陽光般溫暖的愛！", "月亮般浪漫的愛！", "星星般閃耀的愛！", "彩虹般美麗的愛！"] },
-        { question: "如果可以回到過去，你最想重新體驗哪一刻？", options: ["第一次見面", "第一次約會", "第一次牽手", "第一次說愛你"], answers: ["那個初遇的美好！", "緊張又甜蜜的第一次約會！", "牽手瞬間的悸動！", "說愛你的勇氣！"] }
-    ];
-    let currentQuestion = 0;
-    let musicPlaying = false;
-    let showVolumeControl = false;
-    
-    // 2. 與 Google Sheet 溝通的核心函式
-    // =======================================================
-    async function callApi(action, payload) {
-        if (!navigator.onLine) {
-            alert('🚫 目前處於離線狀態，無法進行此操作。請連上網路後再試。');
-            return { status: 'offline' };
-        }
-        document.body.style.cursor = 'wait';
-        try {
-            const response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                redirect: "follow",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({ action, payload })
-            });
-            return await response.json();
-        } catch (error) {
-            console.error('API 呼叫失敗:', error);
-            alert('網路連線或雲端服務發生錯誤，請稍後再試。');
-            return { status: 'error', message: error.toString() };
-        } finally {
-            document.body.style.cursor = 'default';
-        }
-    }
+        const loveQuestions = [
+            { question: "你最喜歡我們一起做的事情是什麼？", options: ["一起看電影", "一起散步", "一起吃飯", "一起旅行"], answers: ["看電影讓我們更親近！", "散步時光最浪漫！", "一起吃飯最幸福！", "旅行讓我們更了解彼此！"] },
+            { question: "你認為我們的愛情像什麼？", options: ["溫暖的陽光", "浪漫的月亮", "燦爛的星星", "美麗的彩虹"], answers: ["陽光般溫暖的愛！", "月亮般浪漫的愛！", "星星般閃耀的愛！", "彩虹般美麗的愛！"] },
+            { question: "如果可以回到過去，你最想重新體驗哪一刻？", options: ["第一次見面", "第一次約會", "第一次牽手", "第一次說愛你"], answers: ["那個初遇的美好！", "緊張又甜蜜的第一次約會！", "牽手瞬間的悸動！", "說愛你的勇氣！"] }
+        ];
+        let currentQuestion = 0;
+        let musicPlaying = false;
+        let uploadInProgress = false;
 
-    // 3. 頁面初始化與混合資料載入
-    // =======================================================
-    async function init() {
-        console.log('💕 週年紀念網站初始化中 (混合模式)...');
-        setupStaticUI();
-        await loadData();
-        manualSortTimeline();
-        initializeEventListeners();
-        console.log('✅ 週年紀念網站初始化完成！');
-    }
-
-    function setupStaticUI() {
-        createStars();
-        updateCounter();
-        setInterval(updateCounter, 1000);
-        setInterval(createFloatingHeart, 2000);
-        initMusicControl();
-    }
-
-    async function loadData() {
-        console.log('☁️ 正在嘗試從雲端載入資料...');
-        try {
+        // 2. 與 Google Sheet 溝通的核心函式
+        async function callApi(action, payload) {
             if (!navigator.onLine) {
-                throw new Error("處於離線狀態");
+                alert('🚫 目前處於離線狀態，無法進行此操作。請連上網路後再試。');
+                return { status: 'offline' };
             }
-            const response = await fetch(SCRIPT_URL);
-            if (!response.ok) {
-                throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
-            }
-            const cloudData = await response.json();
-            console.log('✅ 成功從雲端獲取資料。');
-            saveDataToLocal(cloudData); // 存一份到本地快照
-            renderPage(cloudData);
-            showOnlineStatus(true);
-        } catch (error) {
-            console.warn('❌ 無法從雲端獲取資料:', error.message, '將嘗試從本地快照載入。');
-            const localData = loadDataFromLocal();
-            if (localData) {
-                console.log('✅ 成功從本地快照載入資料。');
-                renderPage(localData);
-                showOnlineStatus(false, localData.timestamp);
-            } else {
-                console.log('🔧 本地無快照，載入預設資料。');
-                renderPage({ timeline: [], messages: [], photos: [] }, true); // 傳遞 true 來觸發預設內容
-                showOnlineStatus(false);
-            }
-        }
-    }
-    
-    function renderPage(data, isDefault = false) {
-        // 渲染時間軸
-        const timelineContainer = document.getElementById('timeline');
-        timelineContainer.innerHTML = '';
-        if (data.timeline && data.timeline.length > 0) {
-             data.timeline.forEach(item => createTimelineItemElement(item));
-        } else if (isDefault) {
-            initializeDefaultTimeline(); // 只有在雲端和本地都沒資料時才載入預設
-        }
-
-        // 渲染留言
-        const messageList = document.getElementById('messageList');
-        messageList.innerHTML = '';
-        if (data.messages) {
-            data.messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).forEach(msg => createMessageItemElement(msg));
-        }
-
-        // 渲染照片
-        const photoGallery = document.getElementById('photoGallery');
-        photoGallery.innerHTML = '';
-        if (data.photos) {
-            data.photos.forEach(photo => createPhotoItemElement(photo));
-        }
-    }
-
-    function showOnlineStatus(isOnline, lastSyncTime) {
-        let statusDiv = document.getElementById('onlineStatus');
-        if (!statusDiv) {
-            statusDiv = document.createElement('div');
-            statusDiv.id = 'onlineStatus';
-            statusDiv.style.cssText = `
-                position: fixed; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7);
-                color: white; padding: 8px 15px; border-radius: 20px; font-size: 12px;
-                z-index: 1001; transition: all 0.5s; text-align: left;
-            `;
-            document.body.appendChild(statusDiv);
-        }
-        if (isOnline) {
-            statusDiv.innerHTML = '☁️ 已連線至雲端';
-            statusDiv.style.background = '#28a745';
-        } else {
-            const timeString = lastSyncTime ? `上次同步：${new Date(lastSyncTime).toLocaleString('zh-TW', { dateStyle: 'short', timeStyle: 'short' })}` : '無同步記錄';
-            statusDiv.innerHTML = `🚫 離線模式<br><small style="font-size: 10px;">${timeString}</small>`;
-            statusDiv.style.background = '#dc3545';
-        }
-    }
-
-    // 4. 本地儲存 (LocalStorage) 相關函式
-    // =======================================================
-    function saveDataToLocal(data) {
-        try {
-            data.timestamp = new Date().toISOString(); // 加上時間戳
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
-            console.log('💾 資料快照已儲存至本地。');
-        } catch (e) {
-            console.error('儲存本地快照失敗:', e);
-        }
-    }
-
-    function loadDataFromLocal() {
-        const data = localStorage.getItem(LOCAL_STORAGE_KEY);
-        return data ? JSON.parse(data) : null;
-    }
-
-    // 5. 事件監聽器與使用者操作
-    // =======================================================
-    function initializeEventListeners() {
-        document.getElementById('photoInput').addEventListener('change', handlePhotoUpload);
-        document.addEventListener('keydown', handleKeydown);
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => { manualSortTimeline(); }, 250);
-        });
-    }
-
-    async function addLoveMessage() {
-        const messageInput = document.getElementById('messageInput');
-        const messageText = messageInput.value.trim();
-        if (!messageText) return alert('請輸入留言內容！');
-        const messageData = { id: 'msg_' + Date.now(), text: messageText, timestamp: new Date().toISOString() };
-        const result = await callApi('ADD_MESSAGE', messageData);
-        if (result.status === 'success') {
-            createMessageItemElement(messageData);
-            messageInput.value = '';
-        } else if (result.status !== 'offline') {
-            alert('新增留言失敗，請稍後再試。');
-        }
-    }
-
-    window.deleteMessage = async function(messageId) {
-        if (!confirm('確定要刪除這則留言嗎？')) return;
-        const result = await callApi('DELETE_MESSAGE', { id: messageId });
-        if (result.status === 'success') {
-            document.querySelector(`.message-item[data-id="${messageId}"]`).remove();
-        } else if (result.status !== 'offline') {
-            alert('刪除留言失敗，請稍後再試。');
-        }
-    }
-
-    window.saveNewTimelineItem = async function() {
-        const title = document.getElementById('newTimelineTitle').value.trim();
-        const content = document.getElementById('newTimelineContent').value.trim();
-        const dateValue = document.getElementById('newTimelineDate').value;
-        if (!title || !content || !dateValue) return alert('請填寫完整的回憶資訊！');
-        const itemData = { id: 'timeline_' + Date.now(), date: dateValue, title: title, content: content };
-        const result = await callApi('ADD_TIMELINE', itemData);
-        if (result.status === 'success') {
-            createTimelineItemElement(itemData);
-            manualSortTimeline();
-            hideAddTimelinePopup();
-        } else if (result.status !== 'offline') {
-            alert('新增回憶失敗，請稍後再試。');
-        }
-    }
-
-    window.deleteTimelineItem = async function(itemId) {
-        if (!confirm('確定要刪除這個回憶嗎？')) return;
-        const result = await callApi('DELETE_TIMELINE', { id: itemId });
-        if (result.status === 'success') {
-            document.querySelector(`.timeline-item[data-id="${itemId}"]`).remove();
-            manualSortTimeline();
-        } else if (result.status !== 'offline') {
-            alert('刪除回憶失敗，請稍後再試。');
-        }
-    }
-
-    window.saveTimelineEdit = async function(itemId) {
-        const newTitle = document.getElementById(`edit_title_${itemId}`).value.trim();
-        const newContent = document.getElementById(`edit_content_${itemId}`).value.trim();
-        const newDateValue = document.getElementById(`edit_date_${itemId}`).value;
-        if (!newTitle || !newContent || !newDateValue) return alert('請填寫完整的回憶資訊！');
-        const itemData = { id: itemId, date: newDateValue, title: newTitle, content: newContent };
-        const result = await callApi('EDIT_TIMELINE', itemData);
-        if (result.status === 'success') {
-            const itemElement = document.querySelector(`.timeline-item[data-id="${itemId}"]`);
-            itemElement.querySelector('h4').textContent = newTitle;
-            itemElement.querySelector('p').textContent = newContent;
-            itemElement.querySelector('small').textContent = formatDateFromInput(newDateValue);
-            cancelTimelineEdit(itemId);
-            manualSortTimeline();
-        } else if (result.status !== 'offline') {
-            alert('更新回憶失敗，請稍後再試。');
-        }
-    }
-    
-    async function handlePhotoUpload(e) {
-        const files = e.target.files;
-        if (!files.length) return;
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const reader = new FileReader();
-            reader.onload = async function(event) {
-                const imageData = event.target.result;
-                if (imageData.length > 1500000) { alert(`照片 "${file.name}" 過大(超過1.5MB)，請壓縮後再試。`); return; }
-                const photoData = { id: 'photo_' + Date.now() + '_' + i, caption: `我們的回憶 ${new Date().toLocaleDateString()}`, imageData: imageData };
-                const result = await callApi('ADD_PHOTO', photoData);
-                if (result.status === 'success') {
-                    createPhotoItemElement(photoData);
-                } else if (result.status !== 'offline') {
-                    alert(`上傳照片 "${file.name}" 失敗。可能是檔案太大或網路問題。`);
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-        document.getElementById('photoInput').value = '';
-    }
-
-    window.deletePhoto = async function(photoId) {
-        if (!confirm('確定要刪除這張照片嗎？')) return;
-        const result = await callApi('DELETE_PHOTO', { id: photoId });
-        if (result.status === 'success') {
-            document.getElementById(photoId).remove();
-        } else if (result.status !== 'offline') {
-            alert('刪除照片失敗，請稍後再試。');
-        }
-    }
-
-    window.saveCaptionEdit = async function(photoId) {
-        const photoElement = document.getElementById(photoId);
-        const captionText = photoElement.querySelector('.caption-text');
-        const captionInput = photoElement.querySelector('.caption-input');
-        const newCaption = captionInput.value.trim();
-        const result = await callApi('EDIT_CAPTION', { id: photoId, caption: newCaption });
-        if (result.status === 'success') {
-            captionText.textContent = newCaption;
-            captionText.style.display = 'inline';
-            captionInput.style.display = 'none';
-        } else if (result.status !== 'offline') {
-            alert('更新標題失敗！');
-            captionText.style.display = 'inline';
-            captionInput.style.display = 'none';
-        }
-    }
-
-    // 6. 本地備份相關函式 (優化版)
-    // =======================================================
-    function collectCurrentPageData() {
-        const timeline = Array.from(document.querySelectorAll('.timeline-item[data-id]')).map(el => ({
-            id: el.dataset.id,
-            title: el.querySelector('h4').textContent,
-            content: el.querySelector('p').textContent,
-            date: convertToDateInput(el.querySelector('small').textContent),
-        }));
-        const messages = Array.from(document.querySelectorAll('.message-item[data-id]')).map(el => ({
-            id: el.dataset.id,
-            timestamp: el.querySelector('.message-date').textContent,
-            text: el.querySelector('div:last-child').innerHTML.replace(/<br>/g, '\n'),
-        }));
-        const photos = Array.from(document.querySelectorAll('.photo-item')).map(el => ({
-            id: el.id,
-            caption: el.querySelector('.caption-text').textContent,
-            imageData: el.querySelector('img').src,
-        }));
-        return { timeline, messages, photos, timestamp: new Date().toISOString() };
-    }
-
-    function exportMemories() {
-        const dataToExport = collectCurrentPageData();
-        const dataStr = JSON.stringify(dataToExport, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(dataBlob);
-        link.download = `我們的回憶_備份_${new Date().toISOString().split('T')[0]}.json`;
-        link.click();
-        URL.revokeObjectURL(link.href);
-        alert('💾 當前頁面所有回憶已導出為備份檔案！');
-    }
-
-    function importMemories(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        if (!confirm('導入備份將會覆蓋當前頁面顯示的內容，但「不會」影響雲端資料。確定要導入嗎？')) return;
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
+            document.body.style.cursor = 'wait';
             try {
-                const importedData = JSON.parse(e.target.result);
-                if (!importedData.timeline || !importedData.messages || !importedData.photos) {
-                    throw new Error("檔案格式不正確");
-                }
-                renderPage(importedData);
-                manualSortTimeline();
-                alert('✅ 備份已成功導入並顯示在頁面上。刷新頁面即可恢復雲端內容。');
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    redirect: "follow",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ action, payload })
+                });
+                return await response.json();
             } catch (error) {
-                alert('❌ 檔案讀取或格式錯誤！請確認是正確的JSON備份檔案。');
+                console.error('API 呼叫失敗:', error);
+                alert('網路連線或雲端服務發生錯誤，請稍後再試。');
+                return { status: 'error', message: error.toString() };
+            } finally {
+                document.body.style.cursor = 'default';
+            }
+        }
+
+        // 3. 頁面初始化
+        async function init() {
+            console.log('💕 週年紀念網站初始化中...');
+            setupStaticUI();
+            await loadData();
+            manualSortTimeline();
+            initializeEventListeners();
+            console.log('✅ 週年紀念網站初始化完成！');
+        }
+
+        function setupStaticUI() {
+            createStars();
+            updateCounter();
+            setInterval(updateCounter, 1000);
+            setInterval(createFloatingHeart, 2000);
+            initMusicControl();
+        }
+
+        async function loadData() {
+            console.log('☁️ 正在嘗試從雲端載入資料...');
+            try {
+                if (!navigator.onLine) {
+                    throw new Error("處於離線狀態");
+                }
+                const response = await fetch(SCRIPT_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
+                }
+                const cloudData = await response.json();
+                console.log('✅ 成功從雲端獲取資料。');
+                saveDataToLocal(cloudData);
+                renderPage(cloudData);
+                showOnlineStatus(true);
+            } catch (error) {
+                console.warn('❌ 無法從雲端獲取資料:', error.message, '將嘗試從本地快照載入。');
+                const localData = loadDataFromLocal();
+                if (localData) {
+                    console.log('✅ 成功從本地快照載入資料。');
+                    renderPage(localData);
+                    showOnlineStatus(false, localData.timestamp);
+                } else {
+                    console.log('🔧 本地無快照，載入預設資料。');
+                    renderPage({ timeline: [], messages: [], photos: [] }, true);
+                    showOnlineStatus(false);
+                }
+            }
+        }
+
+        function renderPage(data, isDefault = false) {
+            // 渲染時間軸
+            const timelineContainer = document.getElementById('timeline');
+            timelineContainer.innerHTML = '';
+            if (data.timeline && data.timeline.length > 0) {
+                data.timeline.forEach(item => createTimelineItemElement(item));
+            } else if (isDefault) {
+                initializeDefaultTimeline();
+            }
+
+            // 渲染留言
+            const messageList = document.getElementById('messageList');
+            messageList.innerHTML = '';
+            if (data.messages) {
+                data.messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).forEach(msg => createMessageItemElement(msg));
+            }
+
+            // 渲染照片 - 支援新格式
+            const photoGallery = document.getElementById('photoGallery');
+            photoGallery.innerHTML = '';
+            if (data.photos) {
+                data.photos.forEach(photo => createPhotoItemElement(photo));
+            }
+        }
+
+        function showOnlineStatus(isOnline, lastSyncTime) {
+            let statusDiv = document.getElementById('onlineStatus');
+            if (!statusDiv) {
+                statusDiv = document.createElement('div');
+                statusDiv.id = 'onlineStatus';
+                statusDiv.style.cssText = `
+                    position: fixed; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7);
+                    color: white; padding: 8px 15px; border-radius: 20px; font-size: 12px;
+                    z-index: 1001; transition: all 0.5s; text-align: left;
+                `;
+                document.body.appendChild(statusDiv);
+            }
+            if (isOnline) {
+                statusDiv.innerHTML = '☁️ 已連線至雲端';
+                statusDiv.style.background = '#28a745';
+            } else {
+                const timeString = lastSyncTime ? `上次同步：${new Date(lastSyncTime).toLocaleString('zh-TW', { dateStyle: 'short', timeStyle: 'short' })}` : '無同步記錄';
+                statusDiv.innerHTML = `🚫 離線模式<br><small style="font-size: 10px;">${timeString}</small>`;
+                statusDiv.style.background = '#dc3545';
+            }
+        }
+
+        // 4. 本地儲存相關函式
+        function saveDataToLocal(data) {
+            try {
+                data.timestamp = new Date().toISOString();
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+                console.log('💾 資料快照已儲存至本地。');
+            } catch (e) {
+                console.error('儲存本地快照失敗:', e);
+            }
+        }
+
+        function loadDataFromLocal() {
+            const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+            return data ? JSON.parse(data) : null;
+        }
+
+        // 5. 事件監聽器
+        function initializeEventListeners() {
+            document.getElementById('photoInput').addEventListener('change', handlePhotoUpload);
+            document.addEventListener('keydown', handleKeydown);
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => { manualSortTimeline(); }, 250);
+            });
+        }
+
+        // 6. 照片上傳處理 - 升級為 Google Drive 版本
+        async function handlePhotoUpload(e) {
+            const files = e.target.files;
+            if (!files.length) return;
+
+            if (uploadInProgress) {
+                alert('照片上傳進行中，請稍後再試。');
+                return;
+            }
+
+            uploadInProgress = true;
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadProgress = document.getElementById('uploadProgress');
+            const uploadStatus = document.getElementById('uploadStatus');
+            const uploadProgressFill = document.getElementById('uploadProgressFill');
+            const uploadDetails = document.getElementById('uploadDetails');
+
+            // 顯示上傳進度
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = '上傳中...';
+            uploadProgress.classList.add('show');
+
+            try {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const progress = ((i + 1) / files.length) * 100;
+                    
+                    uploadStatus.textContent = `上傳中... (${i + 1}/${files.length})`;
+                    uploadProgressFill.style.width = progress + '%';
+                    uploadDetails.textContent = `正在處理：${file.name}`;
+
+                    // 檢查文件類型
+                    if (!file.type.startsWith('image/')) {
+                        alert(`檔案 "${file.name}" 不是圖片格式，已略過。`);
+                        continue;
+                    }
+
+                    // 檢查文件大小（雖然 Google Drive 沒有限制，但為了避免網路傳輸問題）
+                    const maxSize = 10 * 1024 * 1024; // 10MB
+                    if (file.size > maxSize) {
+                        alert(`照片 "${file.name}" 超過 10MB，建議先壓縮後再上傳。`);
+                        continue;
+                    }
+
+                    // 讀取文件
+                    const reader = new FileReader();
+                    const imageData = await new Promise((resolve, reject) => {
+                        reader.onload = (event) => resolve(event.target.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+
+                    // 準備上傳資料
+                    const photoData = {
+                        id: 'photo_' + Date.now() + '_' + i,
+                        caption: `我們的回憶 ${new Date().toLocaleDateString()}`,
+                        imageData: imageData,
+                        fileName: file.name
+                    };
+
+                    // 上傳到 Google Drive
+                    uploadDetails.textContent = `正在上傳到 Google Drive：${file.name}`;
+                    const result = await callApi('UPLOAD_PHOTO', photoData);
+
+                    if (result.status === 'success') {
+                        // 立即顯示上傳成功的照片
+                        createPhotoItemElement(result.data);
+                        console.log('✅ 照片上傳成功:', file.name);
+                    } else {
+                        console.error('❌ 照片上傳失敗:', file.name, result.message);
+                        alert(`上傳照片 "${file.name}" 失敗：${result.message}`);
+                    }
+                }
+
+                uploadStatus.textContent = '上傳完成！';
+                uploadDetails.textContent = '所有照片已成功上傳到 Google Drive';
+                uploadProgressFill.style.width = '100%';
+
+                // 2秒後隱藏進度條
+                setTimeout(() => {
+                    uploadProgress.classList.remove('show');
+                }, 2000);
+
+            } catch (error) {
+                console.error('照片上傳過程中發生錯誤:', error);
+                uploadStatus.textContent = '上傳失敗！';
+                uploadDetails.textContent = '發生錯誤：' + error.message;
+            } finally {
+                uploadInProgress = false;
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = '📸 選擇照片';
+                document.getElementById('photoInput').value = '';
+            }
+        }
+
+        // 7. 創建照片元素 - 支援 Google Drive 版本
+        function createPhotoItemElement(photo) {
+            const gallery = document.getElementById('photoGallery');
+            const photoItem = document.createElement('div');
+            photoItem.className = 'photo-item';
+            photoItem.id = photo.id;
+
+            // 判斷是新格式(Google Drive)還是舊格式(Base64)
+            const imageUrl = photo.imageUrl || photo.imageData;
+            const isGoogleDrivePhoto = photo.imageUrl && photo.driveFileId;
+
+            photoItem.innerHTML = `
+                <div class="photo-loading">載入中...</div>
+                <div class="photo-controls">
+                    <button class="photo-control-btn edit-btn" onclick="editCaption('${photo.id}')" title="編輯標題">✏️</button>
+                    <button class="photo-control-btn" onclick="deletePhoto('${photo.id}')" title="刪除照片">🗑️</button>
+                    ${isGoogleDrivePhoto ? '<button class="photo-control-btn" onclick="openInDrive(\'' + photo.driveFileId + '\')" title="在 Google Drive 中開啟">🔗</button>' : ''}
+                </div>
+                <div class="caption">
+                    <span class="caption-text">${photo.caption}</span>
+                    <input class="caption-input" style="display: none;" value="${photo.caption}" onblur="saveCaptionEdit('${photo.id}')" onkeypress="handleCaptionKeypress(event, '${photo.id}')">
+                </div>
+            `;
+
+            // 載入圖片
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = photo.caption;
+            img.onload = () => {
+                photoItem.querySelector('.photo-loading').remove();
+                photoItem.prepend(img);
+            };
+            img.onerror = () => {
+                photoItem.querySelector('.photo-loading').textContent = '載入失敗';
+                console.error('照片載入失敗:', photo.id, imageUrl);
+            };
+
+            gallery.appendChild(photoItem);
+        }
+
+        // 8. 在 Google Drive 中開啟照片
+        window.openInDrive = function(driveFileId) {
+            const driveUrl = `https://drive.google.com/file/d/${driveFileId}/view`;
+            window.open(driveUrl, '_blank');
+        };
+
+        // 9. 刪除照片 - 支援 Google Drive
+        window.deletePhoto = async function(photoId) {
+            if (!confirm('確定要刪除這張照片嗎？此操作將同時刪除 Google Drive 中的檔案。')) return;
+
+            const result = await callApi('DELETE_PHOTO', { id: photoId });
+            if (result.status === 'success') {
+                document.getElementById(photoId).remove();
+                console.log('✅ 照片已刪除:', photoId);
+            } else if (result.status !== 'offline') {
+                alert('刪除照片失敗：' + result.message);
             }
         };
-        reader.readAsText(file);
-        event.target.value = '';
-    }
 
-    // 7. 剩餘的 UI/動畫/輔助 函式
-    // =======================================================
-    function createTimelineItemElement(item) {
-        const timelineContainer = document.getElementById('timeline');
-        const newItem = document.createElement('div');
-        newItem.className = 'timeline-item';
-        newItem.setAttribute('data-id', item.id);
-        const displayDate = formatDateFromInput(item.date);
-        newItem.innerHTML = `
-            <div class="timeline-controls">
-                <button class="timeline-control-btn" onclick="editTimelineItem('${item.id}')" title="編輯">✏️</button>
-                <button class="timeline-control-btn delete-btn" onclick="deleteTimelineItem('${item.id}')" title="刪除">🗑️</button>
-            </div>
-            <h4>${item.title}</h4>
-            <p>${item.content}</p>
-            <small>${displayDate}</small>
-            <div class="timeline-edit-form" id="edit_${item.id}">
-                <input type="text" class="edit-input" id="edit_title_${item.id}" value="${item.title}">
-                <textarea class="edit-input" id="edit_content_${item.id}" rows="3">${item.content}</textarea>
-                <input type="date" class="edit-input" id="edit_date_${item.id}" value="${item.date}">
-                <div class="edit-btn-group">
-                    <button class="edit-save-btn" onclick="saveTimelineEdit('${item.id}')">💾 保存</button>
-                    <button class="edit-cancel-btn" onclick="cancelTimelineEdit('${item.id}')">❌ 取消</button>
-                </div>
-            </div>`;
-        timelineContainer.appendChild(newItem);
-    }
-    function createMessageItemElement(msg) {
-        const messageList = document.getElementById('messageList');
-        const messageItem = document.createElement('div');
-        messageItem.className = 'message-item';
-        messageItem.setAttribute('data-id', msg.id);
-        messageItem.innerHTML = `
-            <button class="message-delete-btn" onclick="deleteMessage('${msg.id}')" title="刪除留言">🗑️</button>
-            <div class="message-date">${new Date(msg.timestamp).toLocaleString('zh-TW')}</div>
-            <div>${msg.text.replace(/\n/g, '<br>')}</div>`;
-        messageList.prepend(messageItem);
-    }
-    function createPhotoItemElement(photo) {
-        const gallery = document.getElementById('photoGallery');
-        const photoItem = document.createElement('div');
-        photoItem.className = 'photo-item';
-        photoItem.id = photo.id;
-        photoItem.innerHTML = `
-            <img src="${photo.imageData}" alt="我們的照片">
-            <div class="photo-controls">
-                <button class="photo-control-btn edit-btn" onclick="editCaption('${photo.id}')" title="編輯標題">✏️</button>
-                <button class="photo-control-btn" onclick="deletePhoto('${photo.id}')" title="刪除照片">🗑️</button>
-            </div>
-            <div class="caption">
-                <span class="caption-text">${photo.caption}</span>
-                <input class="caption-input" style="display: none;" value="${photo.caption}" onblur="saveCaptionEdit('${photo.id}')" onkeypress="handleCaptionKeypress(event, '${photo.id}')">
-            </div>`;
-        gallery.appendChild(photoItem);
-    }
-    function initializeDefaultTimeline() {
-        const defaultItems = [
-            { id: 'timeline_1', title: '第一次見面', content: '那個打工，環境正好，我們的目光相遇，時間彷彿停止了。', date: '2023-05-12' },
-            { id: 'timeline_2', title: '第一次約會', content: '緊張又興奮的心情，我們一起欣賞了那有趣的漫威電影。', date: '2023-05-27' },
-            { id: 'timeline_4', title: '第一次旅行', content: '兩個人的宜蘭旅行，看遍了美麗的風景，更看清了彼此。', date: '2023-06-22' },
-            { id: 'timeline_3', title: '確定關係', content: '「我們在一起吧」，這句話至今聽起來仍然甜蜜。', date: '2023-07-12' }
-        ];
-        defaultItems.forEach(item => createTimelineItemElement(item));
-        console.log('🔧 載入預設時間軸資料');
-    }
-    function initMusicControl() {
-        const audio = document.getElementById('backgroundMusic');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeValue = document.getElementById('volumeValue');
-        const musicControl = document.getElementById('musicControl');
-        audio.volume = 0.5;
-        volumeSlider.addEventListener('input', function() { audio.volume = this.value / 100; volumeValue.textContent = this.value + '%'; });
-        musicControl.addEventListener('contextmenu', function(e) { e.preventDefault(); toggleVolumeControl(); });
-        audio.addEventListener('play', () => updateMusicStatus(true));
-        audio.addEventListener('pause', () => updateMusicStatus(false));
-    }
-    function updateMusicStatus(playing) {
-        musicPlaying = playing;
-        document.getElementById('musicControl').classList.toggle('playing', playing);
-        document.getElementById('musicText').textContent = playing ? '暫停音樂' : '播放音樂';
-    }
-    function toggleVolumeControl() {
-        showVolumeControl = !showVolumeControl;
-        document.getElementById('volumeControl').classList.toggle('show', showVolumeControl);
-    }
-    function createStars() {
-        const starsContainer = document.getElementById('stars');
-        if (!starsContainer) return;
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 2 + 's';
-            starsContainer.appendChild(star);
-        }
-    }
-    function updateCounter() {
-        const now = new Date();
-        const difference = now - anniversaryDate;
-        if (difference < 0) return;
-        const days = Math.floor(difference / 86400000);
-        const hours = Math.floor((difference % 86400000) / 3600000);
-        const minutes = Math.floor((difference % 3600000) / 60000);
-        const seconds = Math.floor((difference % 60000) / 1000);
-        document.getElementById('days').textContent = days;
-        document.getElementById('hours').textContent = hours;
-        document.getElementById('minutes').textContent = minutes;
-        document.getElementById('seconds').textContent = seconds;
-        const lovePercentage = Math.min((days / 365) * 100, 100);
-        document.getElementById('progressFill').style.width = lovePercentage + '%';
-        document.getElementById('progressText').textContent = `愛情濃度：${lovePercentage.toFixed(1)}%`;
-    }
-    function toggleMusic() {
-        const audio = document.getElementById('backgroundMusic');
-        if (musicPlaying) { audio.pause(); } else { audio.play().catch(error => { console.log('音樂播放失敗:', error); alert('無法自動播放音樂，請手動點擊播放按鈕。'); }); }
-    }
-    function answerQuestion(answerIndex) {
-        document.getElementById('gameResult').textContent = loveQuestions[currentQuestion].answers[answerIndex - 1];
-        setTimeout(() => {
-            currentQuestion = (currentQuestion + 1) % loveQuestions.length;
-            const newQuestion = loveQuestions[currentQuestion];
-            document.getElementById('gameQuestion').textContent = newQuestion.question;
-            document.querySelectorAll('.option-btn').forEach((btn, index) => { btn.textContent = newQuestion.options[index]; });
-            document.getElementById('gameResult').textContent = '';
-        }, 2000);
-    }
-    window.editCaption = function(photoId) {
-        const photoElement = document.getElementById(photoId);
-        const captionText = photoElement.querySelector('.caption-text');
-        const captionInput = photoElement.querySelector('.caption-input');
-        captionInput.value = captionText.textContent;
-        captionText.style.display = 'none';
-        captionInput.style.display = 'inline';
-        captionInput.focus();
-        captionInput.select();
-    };
-    window.handleCaptionKeypress = function(event, photoId) {
-        if (event.key === 'Enter') saveCaptionEdit(photoId);
-        else if (event.key === 'Escape') {
-            const photoElement = document.getElementById(photoId);
-            photoElement.querySelector('.caption-text').style.display = 'inline';
-            photoElement.querySelector('.caption-input').style.display = 'none';
-        }
-    };
-    function manualSortTimeline() {
-        const items = [];
-        document.querySelectorAll('.timeline-item[data-id]').forEach(element => { items.push({ parsedDate: new Date(convertToDateInput(element.querySelector('small').textContent) || 0), element: element }); });
-        const timelineContainer = document.getElementById('timeline');
-        const isMobile = window.innerWidth <= 768;
-        items.sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime());
-        items.forEach((item, index) => {
-            timelineContainer.appendChild(item.element);
-            if (!isMobile) {
-                const isOdd = index % 2 !== 0;
-                item.element.style.left = isOdd ? '50%' : '0';
-                item.element.style.transform = isOdd ? 'translateX(20px)' : 'translateX(-20px)';
-            } else {
-                item.element.style.left = '';
-                item.element.style.transform = '';
+        // 10. 其他現有函式保持不變...
+        async function addLoveMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const messageText = messageInput.value.trim();
+            if (!messageText) return alert('請輸入留言內容！');
+            const messageData = { id: 'msg_' + Date.now(), text: messageText, timestamp: new Date().toISOString() };
+            const result = await callApi('ADD_MESSAGE', messageData);
+            if (result.status === 'success') {
+                createMessageItemElement(messageData);
+                messageInput.value = '';
+            } else if (result.status !== 'offline') {
+                alert('新增留言失敗，請稍後再試。');
             }
-        });
-    };
-    function formatDateFromInput(dateValue) {
-        if (!dateValue) return '';
-        try { return new Date(dateValue).toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' }); } catch (error) { return dateValue; }
-    }
-    function convertToDateInput(displayDate) {
-        if (!displayDate || displayDate.match(/^\d{4}-\d{2}-\d{2}$/)) return displayDate;
-        if (displayDate.includes('年')) {
-            const y = (displayDate.match(/(\d{4})年/) || [])[1];
-            const m = (displayDate.match(/(\d{1,2})月/) || [])[1];
-            const d = (displayDate.match(/(\d{1,2})日/) || [])[1];
-            if (y && m && d) return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
         }
-        try { const date = new Date(displayDate); if (!isNaN(date.getTime())) return date.toISOString().split('T')[0]; } catch (e) {} return '';
-    }
-    window.editTimelineItem = function(itemId) { document.getElementById(`edit_${itemId}`).classList.add('editing'); };
-    window.cancelTimelineEdit = function(itemId) { document.getElementById(`edit_${itemId}`).classList.remove('editing'); };
-    window.addNewTimelineItem = function() {
-        document.getElementById('newTimelineDate').value = new Date().toISOString().split('T')[0];
-        document.getElementById('addTimelineOverlay').classList.add('show');
-        document.getElementById('addTimelinePopup').classList.add('show');
-        document.getElementById('newTimelineTitle').focus();
-    };
-    window.hideAddTimelinePopup = function() {
-        document.getElementById('addTimelineOverlay').classList.remove('show');
-        document.getElementById('addTimelinePopup').classList.remove('show');
-    };
-    function handleKeydown(event) {
-        const popup = document.getElementById('addTimelinePopup');
-        if (popup && popup.classList.contains('show')) {
-            if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) { event.preventDefault(); saveNewTimelineItem(); }
-            else if (event.key === 'Escape') { event.preventDefault(); hideAddTimelinePopup(); }
+
+        window.deleteMessage = async function(messageId) {
+            if (!confirm('確定要刪除這則留言嗎？')) return;
+            const result = await callApi('DELETE_MESSAGE', { id: messageId });
+            if (result.status === 'success') {
+                document.querySelector(`.message-item[data-id="${messageId}"]`).remove();
+            } else if (result.status !== 'offline') {
+                alert('刪除留言失敗，請稍後再試。');
+            }
         }
-    }
-    function createFireworks() {
-        const fireworksContainer = document.getElementById('fireworks');
-        const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b'];
-        for (let i = 0; i < 15; i++) {
+
+        window.saveNewTimelineItem = async function() {
+            const title = document.getElementById('newTimelineTitle').value.trim();
+            const content = document.getElementById('newTimelineContent').value.trim();
+            const dateValue = document.getElementById('newTimelineDate').value;
+            if (!title || !content || !dateValue) return alert('請填寫完整的回憶資訊！');
+            const itemData = { id: 'timeline_' + Date.now(), date: dateValue, title: title, content: content };
+            const result = await callApi('ADD_TIMELINE', itemData);
+            if (result.status === 'success') {
+                createTimelineItemElement(itemData);
+                manualSortTimeline();
+                hideAddTimelinePopup();
+            } else if (result.status !== 'offline') {
+                alert('新增回憶失敗，請稍後再試。');
+            }
+        }
+
+        window.deleteTimelineItem = async function(itemId) {
+            if (!confirm('確定要刪除這個回憶嗎？')) return;
+            const result = await callApi('DELETE_TIMELINE', { id: itemId });
+            if (result.status === 'success') {
+                document.querySelector(`.timeline-item[data-id="${itemId}"]`).remove();
+                manualSortTimeline();
+            } else if (result.status !== 'offline') {
+                alert('刪除回憶失敗，請稍後再試。');
+            }
+        }
+
+        window.saveTimelineEdit = async function(itemId) {
+            const newTitle = document.getElementById(`edit_title_${itemId}`).value.trim();
+            const newContent = document.getElementById(`edit_content_${itemId}`).value.trim();
+            const newDateValue = document.getElementById(`edit_date_${itemId}`).value;
+            if (!newTitle || !newContent || !newDateValue) return alert('請填寫完整的回憶資訊！');
+            const itemData = { id: itemId, date: newDateValue, title: newTitle, content: newContent };
+            const result = await callApi('EDIT_TIMELINE', itemData);
+            if (result.status === 'success') {
+                const itemElement = document.querySelector(`.timeline-item[data-id="${itemId}"]`);
+                itemElement.querySelector('h4').textContent = newTitle;
+                itemElement.querySelector('p').textContent = newContent;
+                itemElement.querySelector('small').textContent = formatDateFromInput(newDateValue);
+                cancelTimelineEdit(itemId);
+                manualSortTimeline();
+            } else if (result.status !== 'offline') {
+                alert('更新回憶失敗，請稍後再試。');
+            }
+        }
+
+        window.saveCaptionEdit = async function(photoId) {
+            const photoElement = document.getElementById(photoId);
+            const captionText = photoElement.querySelector('.caption-text');
+            const captionInput = photoElement.querySelector('.caption-input');
+            const newCaption = captionInput.value.trim();
+            const result = await callApi('EDIT_CAPTION', { id: photoId, caption: newCaption });
+            if (result.status === 'success') {
+                captionText.textContent = newCaption;
+                captionText.style.display = 'inline';
+                captionInput.style.display = 'none';
+            } else if (result.status !== 'offline') {
+                alert('更新標題失敗！');
+                captionText.style.display = 'inline';
+                captionInput.style.display = 'none';
+            }
+        }
+
+        // 11. 剩餘的輔助函式...
+        function createTimelineItemElement(item) {
+            const timelineContainer = document.getElementById('timeline');
+            const newItem = document.createElement('div');
+            newItem.className = 'timeline-item';
+            newItem.setAttribute('data-id', item.id);
+            const displayDate = formatDateFromInput(item.date);
+            newItem.innerHTML = `
+                <div class="timeline-controls">
+                    <button class="timeline-control-btn" onclick="editTimelineItem('${item.id}')" title="編輯">✏️</button>
+                    <button class="timeline-control-btn delete-btn" onclick="deleteTimelineItem('${item.id}')" title="刪除">🗑️</button>
+                </div>
+                <h4>${item.title}</h4>
+                <p>${item.content}</p>
+                <small>${displayDate}</small>
+                <div class="timeline-edit-form" id="edit_${item.id}">
+                    <input type="text" class="edit-input" id="edit_title_${item.id}" value="${item.title}">
+                    <textarea class="edit-input" id="edit_content_${item.id}" rows="3">${item.content}</textarea>
+                    <input type="date" class="edit-input" id="edit_date_${item.id}" value="${item.date}">
+                    <div class="edit-btn-group">
+                        <button class="edit-save-btn" onclick="saveTimelineEdit('${item.id}')">💾 保存</button>
+                        <button class="edit-cancel-btn" onclick="cancelTimelineEdit('${item.id}')">❌ 取消</button>
+                    </div>
+                </div>`;
+            timelineContainer.appendChild(newItem);
+        }
+
+        function createMessageItemElement(msg) {
+            const messageList = document.getElementById('messageList');
+            const messageItem = document.createElement('div');
+            messageItem.className = 'message-item';
+            messageItem.setAttribute('data-id', msg.id);
+            messageItem.innerHTML = `
+                <button class="message-delete-btn" onclick="deleteMessage('${msg.id}')" title="刪除留言">🗑️</button>
+                <div class="message-date">${new Date(msg.timestamp).toLocaleString('zh-TW')}</div>
+                <div>${msg.text.replace(/\n/g, '<br>')}</div>`;
+            messageList.prepend(messageItem);
+        }
+
+        function initializeDefaultTimeline() {
+            const defaultItems = [
+                { id: 'timeline_1', title: '第一次見面', content: '那個打工，環境正好，我們的目光相遇，時間彷彿停止了。', date: '2023-05-12' },
+                { id: 'timeline_2', title: '第一次約會', content: '緊張又興奮的心情，我們一起欣賞了那有趣的漫威電影。', date: '2023-05-27' },
+                { id: 'timeline_4', title: '第一次旅行', content: '兩個人的宜蘭旅行，看遍了美麗的風景，更看清了彼此。', date: '2023-06-22' },
+                { id: 'timeline_3', title: '確定關係', content: '「我們在一起吧」，這句話至今聽起來仍然甜蜜。', date: '2023-07-12' }
+            ];
+            defaultItems.forEach(item => createTimelineItemElement(item));
+            console.log('🔧 載入預設時間軸資料');
+        }
+
+        function initMusicControl() {
+            const audio = document.getElementById('backgroundMusic');
+            const musicControl = document.getElementById('musicControl');
+            audio.volume = 0.5;
+            audio.addEventListener('play', () => updateMusicStatus(true));
+            audio.addEventListener('pause', () => updateMusicStatus(false));
+        }
+
+        function updateMusicStatus(playing) {
+            musicPlaying = playing;
+            document.getElementById('musicControl').classList.toggle('playing', playing);
+            document.getElementById('musicText').textContent = playing ? '暫停音樂' : '播放音樂';
+        }
+
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            if (!starsContainer) return;
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function updateCounter() {
+            const now = new Date();
+            const difference = now - anniversaryDate;
+            if (difference < 0) return;
+            const days = Math.floor(difference / 86400000);
+            const hours = Math.floor((difference % 86400000) / 3600000);
+            const minutes = Math.floor((difference % 3600000) / 60000);
+            const seconds = Math.floor((difference % 60000) / 1000);
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+            const lovePercentage = Math.min((days / 365) * 100, 100);
+            document.getElementById('progressFill').style.width = lovePercentage + '%';
+            document.getElementById('progressText').textContent = `愛情濃度：${lovePercentage.toFixed(1)}%`;
+        }
+
+        function toggleMusic() {
+            const audio = document.getElementById('backgroundMusic');
+            if (musicPlaying) { 
+                audio.pause(); 
+            } else { 
+                audio.play().catch(error => { 
+                    console.log('音樂播放失敗:', error); 
+                    alert('無法自動播放音樂，請手動點擊播放按鈕。'); 
+                }); 
+            }
+        }
+
+        function answerQuestion(answerIndex) {
+            document.getElementById('gameResult').textContent = loveQuestions[currentQuestion].answers[answerIndex - 1];
             setTimeout(() => {
-                const firework = document.createElement('div');
-                firework.className = 'firework';
-                firework.style.left = Math.random() * 100 + '%';
-                firework.style.top = Math.random() * 100 + '%';
-                firework.style.background = colors[Math.floor(Math.random() * colors.length)];
-                fireworksContainer.appendChild(firework);
-                setTimeout(() => firework.remove(), 1000);
-            }, i * 100);
+                currentQuestion = (currentQuestion + 1) % loveQuestions.length;
+                const newQuestion = loveQuestions[currentQuestion];
+                document.getElementById('gameQuestion').textContent = newQuestion.question;
+                document.querySelectorAll('.option-btn').forEach((btn, index) => { btn.textContent = newQuestion.options[index]; });
+                document.getElementById('gameResult').textContent = '';
+            }, 2000);
         }
-    }
-    function generatePoem() {
-        const poems = ["在這個世界上，\n你是我唯一的星光，\n照亮我前行的路，\n讓我不再迷茫。", "時間會證明，\n我對你的愛永恆不變，\n就像太陽每天升起，\n我的心只為你跳動。"];
-        showMessage('poem', '💝 為你寫的詩', poems[Math.floor(Math.random() * poems.length)]);
-    }
-    const messages = {
-        love: { title: '💕 我的愛意', content: '你知道嗎？每天醒來看到你的笑容，是我最幸福的時刻。我愛你，不只是今天，而是每一天，直到永遠。你是我心中最珍貴的寶藏。' },
-        promise: { title: '🤝 我的承諾', content: '我承諾會一直陪在你身邊，無論是開心還是難過的時候。我會努力成為更好的人，只為了配得上你的愛。讓我們一起創造更多美好的回憶吧！' },
-        future: { title: '🌟 我們的未來', content: '我夢想著和你一起環遊世界，一起看日出日落，一起變老。未來的每一天，我都想和你一起度過。你願意和我一起寫下我們的故事嗎？' }
-    };
-    function showMessage(type, customTitle, customContent) {
-        const msg = (customTitle && customContent) ? { title: customTitle, content: customContent } : messages[type];
-        document.getElementById('messageTitle').textContent = msg.title;
-        document.getElementById('messageContent').innerHTML = msg.content.replace(/\n/g, '<br>');
-        document.getElementById('overlay').classList.add('show');
-        document.getElementById('messagePopup').classList.add('show');
-    }
-    function hideMessage() {
-        document.getElementById('overlay').classList.remove('show');
-        document.getElementById('messagePopup').classList.remove('show');
-    }
-    function createFloatingHeart() {
-        const heart = document.createElement('div');
-        heart.className = 'heart';
-        heart.innerHTML = '💕';
-        heart.style.left = Math.random() * 100 + '%';
-        heart.style.animationDelay = Math.random() * 2 + 's';
-        heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
-        document.getElementById('floatingHearts').appendChild(heart);
-        setTimeout(() => heart.remove(), 6000);
-    }
 
-    // 8. 最終執行
-    // =======================================================
-    window.addEventListener('load', init);
+        window.editCaption = function(photoId) {
+            const photoElement = document.getElementById(photoId);
+            const captionText = photoElement.querySelector('.caption-text');
+            const captionInput = photoElement.querySelector('.caption-input');
+            captionInput.value = captionText.textContent;
+            captionText.style.display = 'none';
+            captionInput.style.display = 'inline';
+            captionInput.focus();
+            captionInput.select();
+        };
 
-</script>
+        window.handleCaptionKeypress = function(event, photoId) {
+            if (event.key === 'Enter') saveCaptionEdit(photoId);
+            else if (event.key === 'Escape') {
+                const photoElement = document.getElementById(photoId);
+                photoElement.querySelector('.caption-text').style.display = 'inline';
+                photoElement.querySelector('.caption-input').style.display = 'none';
+            }
+        };
+
+        function manualSortTimeline() {
+            const items = [];
+            document.querySelectorAll('.timeline-item[data-id]').forEach(element => { 
+                items.push({ 
+                    parsedDate: new Date(convertToDateInput(element.querySelector('small').textContent) || 0), 
+                    element: element 
+                }); 
+            });
+            const timelineContainer = document.getElementById('timeline');
+            const isMobile = window.innerWidth <= 768;
+            items.sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime());
+            items.forEach((item, index) => {
+                timelineContainer.appendChild(item.element);
+                if (!isMobile) {
+                    const isOdd = index % 2 !== 0;
+                    item.element.style.left = isOdd ? '50%' : '0';
+                    item.element.style.transform = isOdd ? 'translateX(20px)' : 'translateX(-20px)';
+                } else {
+                    item.element.style.left = '';
+                    item.element.style.transform = '';
+                }
+            });
+        }
+
+        function formatDateFromInput(dateValue) {
+            if (!dateValue) return '';
+            try { 
+                return new Date(dateValue).toLocaleDateString('zh-TW', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                }); 
+            } catch (error) { 
+                return dateValue; 
+            }
+        }
+
+        function convertToDateInput(displayDate) {
+            if (!displayDate || displayDate.match(/^\d{4}-\d{2}-\d{2}$/)) return displayDate;
+            if (displayDate.includes('年')) {
+                const y = (displayDate.match(/(\d{4})年/) || [])[1];
+                const m = (displayDate.match(/(\d{1,2})月/) || [])[1];
+                const d = (displayDate.match(/(\d{1,2})日/) || [])[1];
+                if (y && m && d) return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+            }
+            try { 
+                const date = new Date(displayDate); 
+                if (!isNaN(date.getTime())) return date.toISOString().split('T')[0]; 
+            } catch (e) {} 
+            return '';
+        }
+
+        window.editTimelineItem = function(itemId) { 
+            document.getElementById(`edit_${itemId}`).classList.add('editing'); 
+        };
+
+        window.cancelTimelineEdit = function(itemId) { 
+            document.getElementById(`edit_${itemId}`).classList.remove('editing'); 
+        };
+
+        window.addNewTimelineItem = function() {
+            document.getElementById('newTimelineDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('addTimelineOverlay').classList.add('show');
+            document.getElementById('addTimelinePopup').classList.add('show');
+            document.getElementById('newTimelineTitle').focus();
+        };
+
+        window.hideAddTimelinePopup = function() {
+            document.getElementById('addTimelineOverlay').classList.remove('show');
+            document.getElementById('addTimelinePopup').classList.remove('show');
+        };
+
+        function handleKeydown(event) {
+            const popup = document.getElementById('addTimelinePopup');
+            if (popup && popup.classList.contains('show')) {
+                if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) { 
+                    event.preventDefault(); 
+                    saveNewTimelineItem(); 
+                }
+                else if (event.key === 'Escape') { 
+                    event.preventDefault(); 
+                    hideAddTimelinePopup(); 
+                }
+            }
+        }
+
+        function createFireworks() {
+            const fireworksContainer = document.getElementById('fireworks');
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b'];
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.left = Math.random() * 100 + '%';
+                    firework.style.top = Math.random() * 100 + '%';
+                    firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    fireworksContainer.appendChild(firework);
+                    setTimeout(() => firework.remove(), 1000);
+                }, i * 100);
+            }
+        }
+
+        function generatePoem() {
+            const poems = [
+                "在這個世界上，\n你是我唯一的星光，\n照亮我前行的路，\n讓我不再迷茫。", 
+                "時間會證明，\n我對你的愛永恆不變，\n就像太陽每天升起，\n我的心只為你跳動。"
+            ];
+            showMessage('poem', '💝 為你寫的詩', poems[Math.floor(Math.random() * poems.length)]);
+        }
+
+        const messages = {
+            love: { title: '💕 我的愛意', content: '你知道嗎？每天醒來看到你的笑容，是我最幸福的時刻。我愛你，不只是今天，而是每一天，直到永遠。你是我心中最珍貴的寶藏。' },
+            promise: { title: '🤝 我的承諾', content: '我承諾會一直陪在你身邊，無論是開心還是難過的時候。我會努力成為更好的人，只為了配得上你的愛。讓我們一起創造更多美好的回憶吧！' },
+            future: { title: '🌟 我們的未來', content: '我夢想著和你一起環遊世界，一起看日出日落，一起變老。未來的每一天，我都想和你一起度過。你願意和我一起寫下我們的故事嗎？' }
+        };
+
+        function showMessage(type, customTitle, customContent) {
+            const msg = (customTitle && customContent) ? { title: customTitle, content: customContent } : messages[type];
+            document.getElementById('messageTitle').textContent = msg.title;
+            document.getElementById('messageContent').innerHTML = msg.content.replace(/\n/g, '<br>');
+            document.getElementById('overlay').classList.add('show');
+            document.getElementById('messagePopup').classList.add('show');
+        }
+
+        function hideMessage() {
+            document.getElementById('overlay').classList.remove('show');
+            document.getElementById('messagePopup').classList.remove('show');
+        }
+
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '💕';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            document.getElementById('floatingHearts').appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
+        }
+
+        // 12. 備份功能
+        function collectCurrentPageData() {
+            const timeline = Array.from(document.querySelectorAll('.timeline-item[data-id]')).map(el => ({
+                id: el.dataset.id,
+                title: el.querySelector('h4').textContent,
+                content: el.querySelector('p').textContent,
+                date: convertToDateInput(el.querySelector('small').textContent),
+            }));
+            const messages = Array.from(document.querySelectorAll('.message-item[data-id]')).map(el => ({
+                id: el.dataset.id,
+                timestamp: el.querySelector('.message-date').textContent,
+                text: el.querySelector('div:last-child').innerHTML.replace(/<br>/g, '\n'),
+            }));
+            const photos = Array.from(document.querySelectorAll('.photo-item')).map(el => ({
+                id: el.id,
+                caption: el.querySelector('.caption-text').textContent,
+                // 注意：這裡只導出照片信息，不包含實際圖片數據
+                note: '照片儲存在 Google Drive 中，備份不包含圖片檔案'
+            }));
+            return { timeline, messages, photos, timestamp: new Date().toISOString() };
+        }
+
+        function exportMemories() {
+            const dataToExport = collectCurrentPageData();
+            const dataStr = JSON.stringify(dataToExport, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `我們的回憶_備份_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+            alert('💾 當前頁面所有回憶已導出為備份檔案！\n\n注意：照片儲存在 Google Drive 中，備份檔案不包含圖片。');
+        }
+
+        function importMemories(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!confirm('導入備份將會覆蓋當前頁面顯示的內容，但「不會」影響雲端資料。確定要導入嗎？')) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (!importedData.timeline || !importedData.messages || !importedData.photos) {
+                        throw new Error("檔案格式不正確");
+                    }
+                    renderPage(importedData);
+                    manualSortTimeline();
+                    alert('✅ 備份已成功導入並顯示在頁面上。刷新頁面即可恢復雲端內容。');
+                } catch (error) {
+                    alert('❌ 檔案讀取或格式錯誤！請確認是正確的JSON備份檔案。');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // 13. 最終執行
+        window.addEventListener('load', init);
+    </script>
 </body>
 </html>
