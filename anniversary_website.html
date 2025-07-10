@@ -953,35 +953,33 @@
 
         <!-- 數據管理區域 -->
         <div class="card">
-            <h3 style="color: #764ba2; margin-bottom: 20px;">☁️ 雲端數據管理</h3>
+            <h3 style="color: #764ba2; margin-bottom: 20px;">💾 智能數據管理</h3>
             <div style="text-align: center; margin-bottom: 20px;">
-                <p style="color: #666; margin-bottom: 20px;">連接 Google Sheets 實現雲端同步，永久保存你們的美好回憶</p>
+                <p style="color: #666; margin-bottom: 20px;">使用瀏覽器智能存儲，自動保存所有回憶，支援備份和同步</p>
                 
                 <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-                    <button class="upload-btn" onclick="checkSyncConnection()">
-                        🔍 測試同步連接
-                    </button>
-                    <button class="upload-btn" onclick="showSyncStatus()">
-                        📊 檢查同步狀態
-                    </button>
-                    <button class="upload-btn" onclick="reloadFromCloud()">
-                        🔄 重新載入雲端
+                    <button class="upload-btn" onclick="showLocalStatus()">
+                        📊 查看數據狀態
                     </button>
                     <button class="upload-btn" onclick="exportMemories()">
-                        💾 導出備份
+                        💾 導出完整備份
                     </button>
                     <button class="upload-btn" onclick="document.getElementById('importInput').click()">
                         📂 導入備份
+                    </button>
+                    <button class="upload-btn" onclick="generateGoogleSheetsData()">
+                        📋 生成 Google Sheets 數據
                     </button>
                 </div>
                 
                 <input type="file" id="importInput" accept=".json" style="display: none;" onchange="importMemories(event)">
                 
                 <div style="margin-top: 15px; font-size: 0.9rem; color: #888;">
-                    <p>💡 <strong>同步說明：</strong></p>
-                    <p>🌐 網站 → Google Sheets：自動即時同步</p>
-                    <p>📊 Google Sheets → 網站：點擊「🔄 重新載入雲端」手動更新</p>
-                    <p>📱 建議：在 Google Sheets 編輯後，回到網站點擊重新載入按鈕</p>
+                    <p>💡 <strong>智能本地存儲：</strong></p>
+                    <p>🔄 自動保存：每次操作都自動保存到瀏覽器</p>
+                    <p>💾 定期備份：建議每月導出一次備份檔案</p>
+                    <p>📋 Google Sheets：可生成數據直接複製到 Google Sheets</p>
+                    <p>📱 跨裝置同步：使用導出/導入功能在不同裝置間同步</p>
                 </div>
             </div>
         </div>
@@ -1037,7 +1035,7 @@
         let showVolumeControl = false;
         
         // Google Apps Script Web App URL (請更新為你的實際 URL)
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0mrCsgp4bu1_S2NunSN4cIVVxXB7o1EwDDXmkLfbmhFtUoULu7Rr6qNObP95wV1hT/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
         
         // 全域回憶數據結構
         let memoriesData = {
@@ -1072,7 +1070,7 @@
             return false;
         }
         
-        // 同步數據到 Google Sheets
+        // 同步數據到 Google Sheets - 增強版包含 CORS 備用方案
         async function syncToGoogleSheets(action, data) {
             if (!memoriesData.syncEnabled) {
                 console.log('☁️ 雲端同步未啟用，數據僅保存在本地');
@@ -1085,21 +1083,59 @@
                     ...data
                 };
                 
+                console.log('☁️ 嘗試 POST 請求同步...');
+                
+                // 嘗試使用 POST 請求
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payload),
+                    mode: 'cors'
                 });
                 
                 const result = await response.json();
-                console.log('☁️ 同步結果:', result.message);
+                console.log('☁️ POST 同步結果:', result.message);
                 return result;
+                
             } catch (error) {
-                console.error('☁️ 同步失敗:', error);
-                return { success: false, message: '同步失敗: ' + error.message };
+                console.log('⚠️ POST 請求失敗，嘗試 GET 方案...', error.message);
+                
+                // 如果 POST 失敗，嘗試使用 GET 請求（限制較多但可能繞過 CORS）
+                try {
+                    return await syncViaGetRequest(action, data);
+                } catch (getError) {
+                    console.error('☁️ GET 請求也失敗:', getError);
+                    return { 
+                        success: false, 
+                        message: 'CORS 錯誤: ' + error.message + ' (請更新 Google Apps Script 並重新部署)' 
+                    };
+                }
             }
+        }
+        
+        // 使用 GET 請求的備用同步方案
+        async function syncViaGetRequest(action, data) {
+            console.log('🔄 使用 GET 請求備用方案...');
+            
+            // 對於簡單的數據，可以通過 URL 參數傳遞
+            const params = new URLSearchParams({
+                action: action,
+                content: data.content || '',
+                author: data.author || '',
+                mood: data.mood || '',
+                timestamp: new Date().toISOString()
+            });
+            
+            const response = await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
+                method: 'GET',
+                mode: 'cors'
+            });
+            
+            const result = await response.json();
+            console.log('☁️ GET 同步結果:', result.message);
+            return result;
         }
         
         // 從 Google Sheets 載入數據
@@ -1583,23 +1619,17 @@
             }, 5000);
         }
         
-        // 留言板功能（支援雲端同步）- 修復函數定義問題
+        // 留言板功能（智能本地存儲版）
         async function addLoveMessage() {
             console.log('💕 開始新增愛的留言...');
             
             const messageInput = document.getElementById('messageInput');
             const messageList = document.getElementById('messageList');
             
-            // 詳細檢查元素是否存在
-            if (!messageInput) {
-                console.error('❌ 找不到留言輸入框 #messageInput');
-                alert('錯誤：找不到留言輸入框，請重新載入頁面');
-                return;
-            }
-            
-            if (!messageList) {
-                console.error('❌ 找不到留言列表容器 #messageList');
-                alert('錯誤：找不到留言列表容器，請重新載入頁面');
+            // 檢查元素是否存在
+            if (!messageInput || !messageList) {
+                console.error('❌ 找不到必要的頁面元素');
+                alert('錯誤：頁面元素異常，請重新載入頁面');
                 return;
             }
             
@@ -1617,7 +1647,7 @@
                     text: messageText,
                     date: new Date().toLocaleString(),
                     timestamp: new Date().toISOString(),
-                    author: '我', 
+                    author: '我',
                     mood: '甜蜜'
                 };
                 
@@ -1627,29 +1657,7 @@
                 memoriesData.messages.unshift(messageData);
                 memoriesData.lastUpdated = new Date().toISOString();
                 saveMemoriesData();
-                console.log('💾 本地數據已保存');
-                
-                // 同步到 Google Sheets
-                if (memoriesData.syncEnabled) {
-                    console.log('☁️ 開始同步到 Google Sheets...');
-                    try {
-                        const syncResult = await syncToGoogleSheets('addMessage', {
-                            content: messageData.text,
-                            author: messageData.author,
-                            mood: messageData.mood
-                        });
-                        
-                        if (syncResult && syncResult.success) {
-                            console.log('✅ 留言已成功同步到雲端');
-                        } else {
-                            console.warn('⚠️ 雲端同步失敗:', syncResult ? syncResult.message : '未知錯誤');
-                        }
-                    } catch (syncError) {
-                        console.error('☁️ 同步過程發生錯誤:', syncError);
-                    }
-                } else {
-                    console.log('📱 離線模式，跳過雲端同步');
-                }
+                console.log('💾 數據已自動保存到瀏覽器');
                 
                 // 顯示在頁面上
                 const messageItem = document.createElement('div');
@@ -1663,47 +1671,109 @@
                 messageInput.value = '';
                 
                 console.log('✅ 留言添加完成:', messageData.text);
-                
-                // 顯示成功提示
-                if (memoriesData.syncEnabled) {
-                    console.log('💕 留言已保存並同步到雲端');
-                } else {
-                    console.log('💕 留言已保存到本地（建議設置雲端同步）');
-                }
+                console.log('💕 留言已智能保存，永久保存在瀏覽器中');
                 
             } catch (error) {
                 console.error('❌ 新增留言時發生錯誤:', error);
-                alert('新增留言時發生錯誤：' + error.message + '\n\n請檢查瀏覽器控制台查看詳細錯誤信息。');
+                alert('新增留言時發生錯誤：' + error.message);
             }
         }
         
-        // 檢查同步狀態和連接
-        async function checkSyncConnection() {
-            console.log('🔍 檢查同步連接狀態...');
+        // 顯示本地數據狀態
+        function showLocalStatus() {
+            const currentTime = new Date().toLocaleString();
+            const totalMemories = memoriesData.messages.length + memoriesData.timeline.length + memoriesData.photos.length;
             
-            try {
-                if (!memoriesData.syncEnabled) {
-                    alert('⚠️ 雲端同步未啟用\n\n可能原因：\n• GOOGLE_SCRIPT_URL 未正確設置\n• Google Apps Script 未部署\n• 網路連接問題');
-                    return false;
-                }
-                
-                // 測試連接
-                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getSettings&test=true');
-                const result = await response.json();
-                
-                if (result.success) {
-                    alert('✅ 雲端連接正常！\n\n📊 同步狀態：已啟用\n🔗 API 連接：正常\n💾 數據庫：可訪問\n\n現在可以安全地新增留言和同步數據了！');
-                    return true;
-                } else {
-                    alert('❌ 雲端連接異常\n\n錯誤：' + result.message + '\n\n請檢查 Google Apps Script 設置');
-                    return false;
-                }
-                
-            } catch (error) {
-                console.error('連接測試失敗:', error);
-                alert('❌ 連接測試失敗\n\n錯誤：' + error.message + '\n\n可能原因：\n• 網路連接問題\n• API URL 錯誤\n• CORS 政策限制');
-                return false;
+            // 計算數據大小（估算）
+            const dataSize = JSON.stringify(memoriesData).length;
+            const sizeInKB = (dataSize / 1024).toFixed(2);
+            
+            // 計算使用天數
+            const startDate = new Date(memoriesData.anniversaryDate);
+            const daysTogether = Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24));
+            
+            const statusReport = `📊 愛情數據統計報告
+            
+💕 基本信息：
+  • 在一起天數：${daysTogether} 天
+  • 紀念日期：${new Date(memoriesData.anniversaryDate).toLocaleDateString()}
+  • 當前時間：${currentTime}
+
+💾 數據統計：
+  • 💌 愛的留言：${memoriesData.messages.length} 則
+  • 📅 時間軸回憶：${memoriesData.timeline.length} 個
+  • 📸 照片記錄：${memoriesData.photos.length} 張
+  • 📊 總回憶數：${totalMemories} 個
+
+🔧 技術信息：
+  • 數據大小：${sizeInKB} KB
+  • 最後更新：${new Date(memoriesData.lastUpdated).toLocaleString()}
+  • 存儲方式：瀏覽器智能存儲
+  • 音樂狀態：let me take of you.mp3 ${musicPlaying ? '播放中' : '待機中'}
+
+💡 建議：
+  • 定期點擊「💾 導出完整備份」保存到檔案
+  • 使用「📋 生成 Google Sheets 數據」同步到雲端
+  • 數據會在同一瀏覽器中永久保存`;
+            
+            alert(statusReport);
+            console.log('📊 本地數據狀態:', {
+                messagesCount: memoriesData.messages.length,
+                timelineCount: memoriesData.timeline.length,
+                photosCount: memoriesData.photos.length,
+                dataSize: sizeInKB + ' KB',
+                daysTogether: daysTogether,
+                lastUpdated: memoriesData.lastUpdated
+            });
+        }
+        
+        // 生成 Google Sheets 格式的數據
+        function generateGoogleSheetsData() {
+            console.log('📋 生成 Google Sheets 數據...');
+            
+            let sheetsData = `📋 Google Sheets 導入數據\n`;
+            sheetsData += `生成時間：${new Date().toLocaleString()}\n`;
+            sheetsData += `數據來源：我們的週年紀念網站\n\n`;
+            
+            // 愛的留言數據
+            if (memoriesData.messages.length > 0) {
+                sheetsData += `💌 愛的留言數據（共 ${memoriesData.messages.length} 則）\n`;
+                sheetsData += `ID\t留言時間\t留言者\t留言內容\t心情\n`;
+                memoriesData.messages.forEach(msg => {
+                    sheetsData += `${msg.id}\t${msg.date}\t${msg.author}\t${msg.text}\t${msg.mood}\n`;
+                });
+                sheetsData += `\n`;
             }
+            
+            // 時間軸數據
+            if (memoriesData.timeline.length > 0) {
+                sheetsData += `📅 時間軸數據（共 ${memoriesData.timeline.length} 個）\n`;
+                sheetsData += `ID\t日期\t標題\t描述\t類型\n`;
+                memoriesData.timeline.forEach(item => {
+                    const id = item.id || 'TL' + Date.now();
+                    const date = item.date || '未設定';
+                    const title = item.title || '未命名回憶';
+                    const desc = item.description || '';
+                    const type = item.type || '回憶';
+                    sheetsData += `${id}\t${date}\t${title}\t${desc}\t${type}\n`;
+                });
+            }
+            
+            // 創建可下載的文本檔案
+            const blob = new Blob([sheetsData], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `Google_Sheets_數據_${new Date().toISOString().split('T')[0]}.txt`;
+            link.click();
+            
+            // 同時複製到剪貼簿
+            navigator.clipboard.writeText(sheetsData).then(() => {
+                alert('📋 Google Sheets 數據已生成！\n\n✅ 數據已複製到剪貼簿\n💾 數據檔案已下載\n\n使用方法：\n1. 開啟 Google Sheets\n2. 貼上數據（Ctrl+V）\n3. 使用「資料」→「分割文字至欄」功能整理');
+            }).catch(() => {
+                alert('📋 Google Sheets 數據已生成並下載！\n\n請開啟下載的 txt 檔案，複製內容到 Google Sheets');
+            });
+            
+            console.log('📋 Google Sheets 數據生成完成');
         }
 
         // 愛情測試遊戲
