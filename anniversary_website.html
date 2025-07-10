@@ -1045,6 +1045,25 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
 
+        .sort-timeline-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 20px 10px;
+            display: inline-block;
+        }
+
+        .sort-timeline-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
         /* 響應式設計 */
         @media (max-width: 768px) {
             .header h1 {
@@ -1185,91 +1204,12 @@
         <!-- 回憶時間軸 - 增強版 -->
         <div class="card">
             <h3 style="color: #764ba2; text-align: center; margin-bottom: 30px;">📅 我們的回憶時間軸</h3>
-            <button class="add-timeline-btn" onclick="addNewTimelineItem()">➕ 新增美好回憶</button>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button class="add-timeline-btn" onclick="addNewTimelineItem()">➕ 新增美好回憶</button>
+                <button class="sort-timeline-btn" onclick="manualSortTimeline()">📅 重新排序</button>
+            </div>
             <div class="timeline" id="timeline">
-                <div class="timeline-item" data-id="timeline_1">
-                    <div class="timeline-controls">
-                        <button class="timeline-control-btn" onclick="editTimelineItem('timeline_1')" title="編輯">✏️</button>
-                        <button class="timeline-control-btn delete-btn" onclick="deleteTimelineItem('timeline_1')" title="刪除">🗑️</button>
-                    </div>
-                    <h4>第一次見面</h4>
-                    <p>那個午後，陽光正好，我們的目光相遇，時間彷彿停止了。</p>
-                    <small>2023年1月1日</small>
-                    
-                    <!-- 編輯表單 -->
-                    <div class="timeline-edit-form" id="edit_timeline_1">
-                        <input type="text" class="edit-input" id="edit_title_timeline_1" placeholder="回憶標題">
-                        <textarea class="edit-input" id="edit_content_timeline_1" placeholder="回憶內容" rows="3"></textarea>
-                        <input type="date" class="edit-input" id="edit_date_timeline_1">
-                        <div class="edit-btn-group">
-                            <button class="edit-save-btn" onclick="saveTimelineEdit('timeline_1')">💾 保存</button>
-                            <button class="edit-cancel-btn" onclick="cancelTimelineEdit('timeline_1')">❌ 取消</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="timeline-item" data-id="timeline_2">
-                    <div class="timeline-controls">
-                        <button class="timeline-control-btn" onclick="editTimelineItem('timeline_2')" title="編輯">✏️</button>
-                        <button class="timeline-control-btn delete-btn" onclick="deleteTimelineItem('timeline_2')" title="刪除">🗑️</button>
-                    </div>
-                    <h4>第一次約會</h4>
-                    <p>緊張又興奮的心情，我們一起走過了那條熟悉的街道。</p>
-                    <small>2023年1月15日</small>
-                    
-                    <!-- 編輯表單 -->
-                    <div class="timeline-edit-form" id="edit_timeline_2">
-                        <input type="text" class="edit-input" id="edit_title_timeline_2" placeholder="回憶標題">
-                        <textarea class="edit-input" id="edit_content_timeline_2" placeholder="回憶內容" rows="3"></textarea>
-                        <input type="date" class="edit-input" id="edit_date_timeline_2">
-                        <div class="edit-btn-group">
-                            <button class="edit-save-btn" onclick="saveTimelineEdit('timeline_2')">💾 保存</button>
-                            <button class="edit-cancel-btn" onclick="cancelTimelineEdit('timeline_2')">❌ 取消</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="timeline-item" data-id="timeline_3">
-                    <div class="timeline-controls">
-                        <button class="timeline-control-btn" onclick="editTimelineItem('timeline_3')" title="編輯">✏️</button>
-                        <button class="timeline-control-btn delete-btn" onclick="deleteTimelineItem('timeline_3')" title="刪除">🗑️</button>
-                    </div>
-                    <h4>確定關係</h4>
-                    <p>「我們在一起吧」，這句話至今聽起來仍然甜蜜。</p>
-                    <small>2023年2月14日</small>
-                    
-                    <!-- 編輯表單 -->
-                    <div class="timeline-edit-form" id="edit_timeline_3">
-                        <input type="text" class="edit-input" id="edit_title_timeline_3" placeholder="回憶標題">
-                        <textarea class="edit-input" id="edit_content_timeline_3" placeholder="回憶內容" rows="3"></textarea>
-                        <input type="date" class="edit-input" id="edit_date_timeline_3">
-                        <div class="edit-btn-group">
-                            <button class="edit-save-btn" onclick="saveTimelineEdit('timeline_3')">💾 保存</button>
-                            <button class="edit-cancel-btn" onclick="cancelTimelineEdit('timeline_3')">❌ 取消</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="timeline-item" data-id="timeline_4">
-                    <div class="timeline-controls">
-                        <button class="timeline-control-btn" onclick="editTimelineItem('timeline_4')" title="編輯">✏️</button>
-                        <button class="timeline-control-btn delete-btn" onclick="deleteTimelineItem('timeline_4')" title="刪除">🗑️</button>
-                    </div>
-                    <h4>第一次旅行</h4>
-                    <p>兩個人的旅行，看遍了美麗的風景，更看清了彼此。</p>
-                    <small>2023年5月1日</small>
-                    
-                    <!-- 編輯表單 -->
-                    <div class="timeline-edit-form" id="edit_timeline_4">
-                        <input type="text" class="edit-input" id="edit_title_timeline_4" placeholder="回憶標題">
-                        <textarea class="edit-input" id="edit_content_timeline_4" placeholder="回憶內容" rows="3"></textarea>
-                        <input type="date" class="edit-input" id="edit_date_timeline_4">
-                        <div class="edit-btn-group">
-                            <button class="edit-save-btn" onclick="saveTimelineEdit('timeline_4')">💾 保存</button>
-                            <button class="edit-cancel-btn" onclick="cancelTimelineEdit('timeline_4')">❌ 取消</button>
-                        </div>
-                    </div>
-                </div>
+                <!-- 時間軸項目將在 JavaScript 中動態生成並排序 -->
             </div>
         </div>
 
@@ -1396,7 +1336,7 @@
 
     <script>
         // 在一起的日期 (請修改為你們的紀念日)
-        const anniversaryDate = new Date('2023-07-12');
+        const anniversaryDate = new Date('2023-01-01');
         
         // 愛情測試題目
         const loveQuestions = [
@@ -1714,7 +1654,235 @@
             }
         };
 
-        // === 時間軸編輯功能 ===
+        // === 時間軸排序和渲染功能 ===
+        
+        // 解析日期函數
+        function parseTimelineDate(dateStr) {
+            if (!dateStr) return new Date();
+            
+            // 如果是 ISO 格式 (YYYY-MM-DD)
+            if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                return new Date(dateStr);
+            }
+            
+            // 如果是中文格式 (2023年1月1日)
+            if (dateStr.includes('年')) {
+                const yearMatch = dateStr.match(/(\d{4})年/);
+                const monthMatch = dateStr.match(/(\d{1,2})月/);
+                const dayMatch = dateStr.match(/(\d{1,2})日/);
+                
+                if (yearMatch && monthMatch && dayMatch) {
+                    const year = parseInt(yearMatch[1]);
+                    const month = parseInt(monthMatch[1]) - 1; // JS 月份從 0 開始
+                    const day = parseInt(dayMatch[1]);
+                    return new Date(year, month, day);
+                }
+            }
+            
+            // 嘗試直接解析
+            try {
+                return new Date(dateStr);
+            } catch (error) {
+                console.warn('無法解析日期:', dateStr);
+                return new Date();
+            }
+        }
+        
+        // 收集所有時間軸項目數據
+        function collectTimelineItems() {
+            const timelineItems = [];
+            const itemElements = document.querySelectorAll('.timeline-item[data-id]');
+            
+            itemElements.forEach(element => {
+                const id = element.getAttribute('data-id');
+                const title = element.querySelector('h4').textContent;
+                const content = element.querySelector('p').textContent;
+                const dateText = element.querySelector('small').textContent;
+                const parsedDate = parseTimelineDate(dateText);
+                
+                timelineItems.push({
+                    id: id,
+                    title: title,
+                    content: content,
+                    dateText: dateText,
+                    parsedDate: parsedDate,
+                    element: element
+                });
+            });
+            
+            return timelineItems;
+        }
+        
+        // 按日期排序時間軸項目
+        function sortTimelineItems() {
+            console.log('📅 開始排序時間軸項目...');
+            
+            const timelineContainer = document.getElementById('timeline');
+            const items = collectTimelineItems();
+            
+            // 按日期排序（從舊到新）
+            items.sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime());
+            
+            // 重新排列 DOM 元素
+            items.forEach((item, index) => {
+                // 移除並重新添加到正確位置
+                timelineContainer.appendChild(item.element);
+                
+                // 重新設置左右佈局
+                item.element.classList.remove('timeline-left', 'timeline-right');
+                if (index % 2 === 0) {
+                    // 偶數項目靠左
+                    item.element.style.left = '0';
+                    item.element.style.transform = 'translateX(-20px)';
+                } else {
+                    // 奇數項目靠右
+                    item.element.style.left = '50%';
+                    item.element.style.transform = 'translateX(20px)';
+                }
+                
+                console.log(`📅 項目 ${index + 1}: ${item.title} - ${item.dateText}`);
+            });
+            
+            // 添加排序完成的視覺反饋
+            timelineContainer.style.background = 'rgba(40, 167, 69, 0.05)';
+            setTimeout(() => {
+                timelineContainer.style.background = 'transparent';
+            }, 1000);
+            
+            console.log('✅ 時間軸排序完成，共', items.length, '個項目');
+            
+            return items.length;
+        }
+        
+        // 顯示排序通知
+        function showSortNotification(itemCount) {
+            // 創建通知元素
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, #28a745, #20c997);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                font-size: 14px;
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.3s ease;
+            `;
+            notification.innerHTML = `📅 時間軸已按日期排序<br><small>共 ${itemCount} 個回憶</small>`;
+            
+            document.body.appendChild(notification);
+            
+            // 顯示動畫
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // 3秒後自動消失
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 手動排序時間軸
+        window.manualSortTimeline = function() {
+            console.log('📅 手動觸發時間軸排序');
+            
+            const itemCount = sortTimelineItems();
+            showSortNotification(itemCount);
+        };
+        
+        // 初始化預設時間軸項目
+        function initializeDefaultTimeline() {
+            console.log('📅 初始化預設時間軸項目...');
+            
+            const timeline = document.getElementById('timeline');
+            const defaultItems = [
+                {
+                    id: 'timeline_1',
+                    title: '第一次見面',
+                    content: '那個午後，陽光正好，我們的目光相遇，時間彷彿停止了。',
+                    date: '2023-01-01',
+                    displayDate: '2023年1月1日'
+                },
+                {
+                    id: 'timeline_2',
+                    title: '第一次約會',
+                    content: '緊張又興奮的心情，我們一起走過了那條熟悉的街道。',
+                    date: '2023-01-15',
+                    displayDate: '2023年1月15日'
+                },
+                {
+                    id: 'timeline_3',
+                    title: '確定關係',
+                    content: '「我們在一起吧」，這句話至今聽起來仍然甜蜜。',
+                    date: '2023-02-14',
+                    displayDate: '2023年2月14日'
+                },
+                {
+                    id: 'timeline_4',
+                    title: '第一次旅行',
+                    content: '兩個人的旅行，看遍了美麗的風景，更看清了彼此。',
+                    date: '2023-05-01',
+                    displayDate: '2023年5月1日'
+                }
+            ];
+            
+            // 清空時間軸容器
+            timeline.innerHTML = '';
+            
+            // 創建所有預設項目
+            defaultItems.forEach(item => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                timelineItem.setAttribute('data-id', item.id);
+                
+                timelineItem.innerHTML = `
+                    <div class="timeline-controls">
+                        <button class="timeline-control-btn" onclick="editTimelineItem('${item.id}')" title="編輯">✏️</button>
+                        <button class="timeline-control-btn delete-btn" onclick="deleteTimelineItem('${item.id}')" title="刪除">🗑️</button>
+                    </div>
+                    <h4>${item.title}</h4>
+                    <p>${item.content}</p>
+                    <small>${item.displayDate}</small>
+                    
+                    <!-- 編輯表單 -->
+                    <div class="timeline-edit-form" id="edit_${item.id}">
+                        <input type="text" class="edit-input" id="edit_title_${item.id}" placeholder="回憶標題">
+                        <textarea class="edit-input" id="edit_content_${item.id}" placeholder="回憶內容" rows="3"></textarea>
+                        <input type="date" class="edit-input" id="edit_date_${item.id}" value="${item.date}">
+                        <div class="edit-btn-group">
+                            <button class="edit-save-btn" onclick="saveTimelineEdit('${item.id}')">💾 保存</button>
+                            <button class="edit-cancel-btn" onclick="cancelTimelineEdit('${item.id}')">❌ 取消</button>
+                        </div>
+                    </div>
+                `;
+                
+                timeline.appendChild(timelineItem);
+            });
+            
+            // 設置時間軸計數器
+            timelineCounter = 5;
+            
+            console.log('✅ 預設時間軸項目創建完成');
+            
+            // 立即進行排序
+            setTimeout(() => {
+                sortTimelineItems();
+                console.log('📅 初始排序完成');
+            }, 100);
+        }
         
         // 日期格式轉換函數
         function formatDateForDisplay(dateInput) {
@@ -1862,6 +2030,12 @@
             
             // 保存到數據
             saveMemoriesData();
+            
+            // 🆕 自動重新排序時間軸
+            setTimeout(() => {
+                const itemCount = sortTimelineItems();
+                showSortNotification(itemCount);
+            }, 500);
         };
         
         // 取消時間軸編輯
@@ -1891,6 +2065,12 @@
                     timelineItem.remove();
                     console.log('✅ 時間軸項目已刪除:', title);
                     saveMemoriesData();
+                    
+                    // 🆕 刪除後重新排序時間軸
+                    const remainingCount = sortTimelineItems();
+                    if (remainingCount > 0) {
+                        showSortNotification(remainingCount);
+                    }
                 }, 500);
             }
         };
@@ -1964,7 +2144,7 @@
                 <div class="timeline-edit-form" id="edit_${newItemId}">
                     <input type="text" class="edit-input" id="edit_title_${newItemId}" placeholder="回憶標題">
                     <textarea class="edit-input" id="edit_content_${newItemId}" placeholder="回憶內容" rows="3"></textarea>
-                    <input type="date" class="edit-input" id="edit_date_${newItemId}">
+                    <input type="date" class="edit-input" id="edit_date_${newItemId}" value="${dateValue}">
                     <div class="edit-btn-group">
                         <button class="edit-save-btn" onclick="saveTimelineEdit('${newItemId}')">💾 保存</button>
                         <button class="edit-cancel-btn" onclick="cancelTimelineEdit('${newItemId}')">❌ 取消</button>
@@ -1999,9 +2179,27 @@
             console.log('✅ 新增時間軸項目成功:', title, '| 日期:', formattedDate);
             saveMemoriesData();
             
-            // 滾動到新項目
+            // 🆕 自動重新排序時間軸並滾動到新項目位置
             setTimeout(() => {
-                newItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const itemCount = sortTimelineItems();
+                showSortNotification(itemCount);
+                
+                // 找到新項目在排序後的位置並滾動過去
+                setTimeout(() => {
+                    const sortedNewItem = document.querySelector(`[data-id="${newItemId}"]`);
+                    if (sortedNewItem) {
+                        sortedNewItem.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                        
+                        // 高亮顯示新項目
+                        sortedNewItem.style.background = 'rgba(40, 167, 69, 0.2)';
+                        setTimeout(() => {
+                            sortedNewItem.style.background = 'rgba(255, 255, 255, 0.9)';
+                        }, 2000);
+                    }
+                }, 500);
             }, 800);
         };
 
@@ -2477,6 +2675,47 @@
             // 初始化音樂控制
             initMusicControl();
             
+            // 🆕 初始化時間軸項目並排序
+            initializeDefaultTimeline();
+            
+            // 顯示初始排序完成提示
+            setTimeout(() => {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 100px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    z-index: 1000;
+                    font-size: 14px;
+                    opacity: 0;
+                    transform: translateX(100%);
+                    transition: all 0.3s ease;
+                `;
+                notification.innerHTML = `🎉 時間軸已按時間順序排列<br><small>編輯日期後會自動重新排序</small>`;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 4000);
+            }, 2000);
+            
             // 初始化日期選擇器預設值
             initializeDateInputs();
             
@@ -2489,10 +2728,12 @@
             console.log('🎵 音樂檔案設定為: "let me take of you.mp3"');
             console.log('✨ 新功能：時間軸編輯和留言刪除');
             console.log('📅 增強功能：日期選擇器取代文字輸入');
+            console.log('🔄 全新功能：智能時間軸排序');
             console.log('🛠️ 增強功能說明：');
             console.log('   📅 時間軸：hover顯示編輯/刪除按鈕，使用日期選擇器');
             console.log('   💌 留言板：hover顯示刪除按鈕');
             console.log('   ➕ 可新增自定義時間軸項目（彈窗表單）');
+            console.log('   🔄 自動按日期排序，編輯日期後重新排列');
             
             // 顯示歡迎訊息
             setTimeout(() => {
@@ -2502,6 +2743,8 @@
                 console.log('   • 滑鼠移到留言上可刪除');
                 console.log('   • 點擊「新增美好回憶」可添加時間軸');
                 console.log('   • 使用日期選擇器更方便選擇日期');
+                console.log('   • 編輯日期後會自動重新排序');
+                console.log('   • 點擊「重新排序」手動整理時間軸');
                 console.log('   • 所有修改都會自動保存');
                 console.log('⌨️ 鍵盤快捷鍵：');
                 console.log('   • 在新增回憶彈窗中：Ctrl+Enter 保存，Escape 取消');
@@ -2512,21 +2755,7 @@
         function initializeDateInputs() {
             console.log('📅 初始化日期選擇器...');
             
-            // 為現有的時間軸項目設置日期輸入預設值
-            const timelineItems = [
-                { id: 'timeline_1', date: '2023-01-01' },
-                { id: 'timeline_2', date: '2023-01-15' },
-                { id: 'timeline_3', date: '2023-02-14' },
-                { id: 'timeline_4', date: '2023-05-01' }
-            ];
-            
-            timelineItems.forEach(item => {
-                const dateInput = document.getElementById(`edit_date_${item.id}`);
-                if (dateInput) {
-                    dateInput.value = item.date;
-                    console.log(`📅 設置 ${item.id} 日期預設值:`, item.date);
-                }
-            });
+            // 由於時間軸項目現在是動態生成的，這裡主要設置鍵盤事件監聽器
             
             // 添加鍵盤事件監聽器
             document.addEventListener('keydown', function(event) {
