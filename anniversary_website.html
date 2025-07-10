@@ -1059,63 +1059,245 @@
             display: inline-block;
         }
 
-        .sort-timeline-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        /* 🔧 確保重要元素不會被覆蓋 */
+        .timeline-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .timeline-edit-form {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* 🔧 手機觸控優化 */
+        @media (max-width: 768px) {
+            /* 增加觸控目標大小 */
+            .timeline-control-btn,
+            .photo-control-btn,
+            .message-delete-btn {
+                min-width: 44px;
+                min-height: 44px;
+                font-size: 16px;
+            }
+            
+            /* 防止誤觸 */
+            .timeline-controls,
+            .photo-controls {
+                opacity: 1; /* 手機上始終顯示，避免 hover 問題 */
+                background: rgba(0,0,0,0.1);
+                border-radius: 5px;
+                padding: 2px;
+            }
+            
+            .message-delete-btn {
+                opacity: 1; /* 手機上始終顯示 */
+            }
         }
 
-/* 響應式設計 - 優化版本 */
-@media (max-width: 768px) {
-    .header h1 {
-        font-size: 2rem;
-    }
-    
-    .time-display {
-        gap: 10px;
-    }
-    
-    .time-unit {
-        min-width: 60px;
-        padding: 15px;
-    }
-    
-    .special-btn {
-        padding: 15px 30px;
-        font-size: 1rem;
-    }
-    
-    /* --- 時間軸優化開始 --- */
-    
-    /* 1. 將垂直線移到左側固定位置 */
-    .timeline::after {
-        left: 31px; /* 垂直線距離左邊 31px */
-    }
-    
-    /* 2. 統一處理所有時間軸項目，不再區分奇偶 */
-    .timeline-item,
-    .timeline-item:nth-child(odd),
-    .timeline-item:nth-child(even) {
-        width: 100%;        /* 寬度佔滿 */
-        left: 0;            /* 從最左邊開始排列 */
-        transform: none;    /* 清除所有位移效果 */
-        padding-left: 70px; /* 左邊留出空間給時間點和線 */
-        padding-right: 25px;/* 右邊保留一些間距 */
-    }
-    
-    /* 3. 精準定位時間點的圓圈，使其中心與垂直線的中心完美對齊 */
-    .timeline-item::after {
-        /*
-         * 計算方式:
-         * 垂直線的 left (31px) - 垂直線寬度一半 (6px/2) = 垂直線中心 (28px)
-         * 我們要讓圓點的中心也對齊在 28px 的位置
-         * 所以圓點的 left = 垂直線中心 (28px) - 圓點寬度一半 (25px/2) = 15.5px
-         * 這裡使用 16px 效果最好
-         */
-        left: 16px; 
-    }
-    
-    /* --- 時間軸優化結束 --- */
-}
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .time-display {
+                gap: 10px;
+            }
+            
+            .time-unit {
+                min-width: 60px;
+                padding: 15px;
+            }
+            
+            .special-btn {
+                padding: 15px 30px;
+                font-size: 1rem;
+                margin: 5px;
+            }
+            
+            /* 🔧 修復時間軸手機版佈局 */
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100% !important;
+                padding-left: 70px !important;
+                padding-right: 25px !important;
+                left: 0 !important;
+                transform: none !important;
+                margin: 15px 0;
+            }
+            
+            .timeline-item:nth-child(odd) {
+                left: 0 !important;
+                transform: none !important;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0 !important;
+                transform: none !important;
+            }
+            
+            .timeline-item::after {
+                left: 15px !important;
+            }
+            
+            /* 🔧 修復按鈕在手機上的顯示 */
+            .add-timeline-btn,
+            .sort-timeline-btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+                margin: 8px auto;
+                display: block;
+                width: 90%;
+                max-width: 280px;
+            }
+            
+            /* 🔧 按鈕容器在手機上的調整 */
+            .card h3 + div {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            /* 🔧 修復彈窗在手機上的顯示 */
+            .add-timeline-popup {
+                width: 95%;
+                padding: 20px;
+                max-width: none;
+            }
+            
+            .popup-input {
+                padding: 15px;
+                font-size: 16px; /* 防止iOS縮放 */
+            }
+            
+            .popup-btn-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .popup-save-btn,
+            .popup-cancel-btn {
+                width: 100%;
+                padding: 15px;
+            }
+            
+            /* 🔧 修復編輯表單在手機上的顯示 */
+            .edit-input {
+                padding: 12px;
+                font-size: 16px; /* 防止iOS縮放 */
+            }
+            
+            .edit-btn-group {
+                text-align: center;
+            }
+            
+            .edit-save-btn,
+            .edit-cancel-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+                margin: 5px;
+            }
+            
+            /* 🔧 修復時間軸控制按鈕 */
+            .timeline-controls {
+                top: 5px;
+                right: 5px;
+            }
+            
+            .timeline-control-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            
+            /* 🔧 修復留言刪除按鈕 */
+            .message-delete-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+                top: 5px;
+                right: 5px;
+            }
+            
+            /* 🔧 確保圖片不會超出螢幕 */
+            .photo-gallery {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            /* 🔧 修復容器邊距 */
+            .container {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            /* 🔧 手機觸控優化 */
+            /* 增加觸控目標大小 */
+            .timeline-control-btn,
+            .photo-control-btn,
+            .message-delete-btn {
+                min-width: 44px;
+                min-height: 44px;
+                font-size: 16px;
+            }
+            
+            /* 防止誤觸 - 手機上始終顯示控制按鈕 */
+            .timeline-controls,
+            .photo-controls {
+                opacity: 1 !important; /* 手機上始終顯示，避免 hover 問題 */
+                background: rgba(0,0,0,0.1);
+                border-radius: 5px;
+                padding: 2px;
+            }
+            
+            .message-delete-btn {
+                opacity: 1 !important; /* 手機上始終顯示 */
+            }
+        }
+
+        /* 🔧 超小螢幕優化 (小於480px) */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .time-unit {
+                min-width: 50px;
+                padding: 10px;
+            }
+            
+            .time-unit .number {
+                font-size: 1.5rem;
+            }
+            
+            .timeline-item {
+                padding-left: 60px !important;
+                padding-right: 15px !important;
+            }
+            
+            .timeline-item h4 {
+                font-size: 1.1rem;
+            }
+            
+            .timeline-item p {
+                font-size: 0.9rem;
+            }
+            
+            .add-timeline-popup {
+                padding: 15px;
+            }
+            
+            .popup-input {
+                padding: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1721,12 +1903,18 @@
             return timelineItems;
         }
         
+        // 檢測是否為手機設備
+        function isMobileDevice() {
+            return window.innerWidth <= 768;
+        }
+        
         // 按日期排序時間軸項目
         function sortTimelineItems() {
             console.log('📅 開始排序時間軸項目...');
             
             const timelineContainer = document.getElementById('timeline');
             const items = collectTimelineItems();
+            const isMobile = isMobileDevice();
             
             // 按日期排序（從舊到新）
             items.sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime());
@@ -1736,19 +1924,30 @@
                 // 移除並重新添加到正確位置
                 timelineContainer.appendChild(item.element);
                 
-                // 重新設置左右佈局
-                item.element.classList.remove('timeline-left', 'timeline-right');
-                if (index % 2 === 0) {
-                    // 偶數項目靠左
-                    item.element.style.left = '0';
-                    item.element.style.transform = 'translateX(-20px)';
+                if (isMobile) {
+                    // 🔧 手機版：所有項目都靠左，不設置 left 和 transform
+                    item.element.style.left = '';
+                    item.element.style.transform = '';
+                    item.element.style.width = '';
+                    item.element.style.paddingLeft = '';
+                    item.element.style.paddingRight = '';
                 } else {
-                    // 奇數項目靠右
-                    item.element.style.left = '50%';
-                    item.element.style.transform = 'translateX(20px)';
+                    // 🖥️ 桌面版：重新設置左右佈局
+                    item.element.classList.remove('timeline-left', 'timeline-right');
+                    if (index % 2 === 0) {
+                        // 偶數項目靠左
+                        item.element.style.left = '0';
+                        item.element.style.transform = 'translateX(-20px)';
+                        item.element.style.width = '50%';
+                    } else {
+                        // 奇數項目靠右
+                        item.element.style.left = '50%';
+                        item.element.style.transform = 'translateX(20px)';
+                        item.element.style.width = '50%';
+                    }
                 }
                 
-                console.log(`📅 項目 ${index + 1}: ${item.title} - ${item.dateText}`);
+                console.log(`📅 項目 ${index + 1}: ${item.title} - ${item.dateText}${isMobile ? ' (手機版)' : ' (桌面版)'}`);
             });
             
             // 添加排序完成的視覺反饋
@@ -1757,7 +1956,7 @@
                 timelineContainer.style.background = 'transparent';
             }, 1000);
             
-            console.log('✅ 時間軸排序完成，共', items.length, '個項目');
+            console.log('✅ 時間軸排序完成，共', items.length, '個項目', isMobile ? '(手機優化)' : '(桌面佈局)');
             
             return items.length;
         }
@@ -1766,20 +1965,24 @@
         function showSortNotification(itemCount) {
             // 創建通知元素
             const notification = document.createElement('div');
+            const isMobile = isMobileDevice();
+            
             notification.style.cssText = `
                 position: fixed;
-                top: 100px;
-                right: 20px;
+                top: ${isMobile ? '80px' : '100px'};
+                right: ${isMobile ? '10px' : '20px'};
                 background: linear-gradient(135deg, #28a745, #20c997);
                 color: white;
-                padding: 15px 20px;
+                padding: ${isMobile ? '12px 15px' : '15px 20px'};
                 border-radius: 10px;
                 box-shadow: 0 5px 15px rgba(0,0,0,0.2);
                 z-index: 1000;
-                font-size: 14px;
+                font-size: ${isMobile ? '12px' : '14px'};
                 opacity: 0;
                 transform: translateX(100%);
                 transition: all 0.3s ease;
+                max-width: ${isMobile ? '250px' : 'none'};
+                word-wrap: break-word;
             `;
             notification.innerHTML = `📅 時間軸已按日期排序<br><small>共 ${itemCount} 個回憶</small>`;
             
@@ -1820,30 +2023,30 @@
                 {
                     id: 'timeline_1',
                     title: '第一次見面',
-                    content: '那個午後，陽光正好，我們的目光相遇，時間彷彿停止了。',
-                    date: '2023-01-01',
-                    displayDate: '2023年1月1日'
+                    content: '那個打工，環境正好，我們的目光相遇，時間彷彿停止了。',
+                    date: '2023-05-12',
+                    displayDate: '2023年5月12日'
                 },
                 {
                     id: 'timeline_2',
                     title: '第一次約會',
-                    content: '緊張又興奮的心情，我們一起走過了那條熟悉的街道。',
-                    date: '2023-01-15',
-                    displayDate: '2023年1月15日'
+                    content: '緊張又興奮的心情，我們一起欣賞了那有趣的漫威電影。',
+                    date: '2023-05-27',
+                    displayDate: '2023年5月27日'
                 },
                 {
                     id: 'timeline_3',
                     title: '確定關係',
                     content: '「我們在一起吧」，這句話至今聽起來仍然甜蜜。',
-                    date: '2023-02-14',
-                    displayDate: '2023年2月14日'
+                    date: '2023-07-12',
+                    displayDate: '2023年7月12日'
                 },
                 {
                     id: 'timeline_4',
                     title: '第一次旅行',
-                    content: '兩個人的旅行，看遍了美麗的風景，更看清了彼此。',
-                    date: '2023-05-01',
-                    displayDate: '2023年5月1日'
+                    content: '兩個人的宜蘭旅行，看遍了美麗的風景，更看清了彼此。',
+                    date: '2023-06-22',
+                    displayDate: '2023年6月22日'
                 }
             ];
             
@@ -2686,23 +2889,56 @@
             // 🆕 初始化時間軸項目並排序
             initializeDefaultTimeline();
             
+            // 🔧 添加螢幕尺寸變化監聽器
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    console.log('📱 螢幕尺寸變化，重新調整時間軸佈局');
+                    sortTimelineItems();
+                }, 250);
+            });
+            
+            // 初始化日期選擇器預設值
+            initializeDateInputs();
+            
+            // 創建初始愛心
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createFloatingHeart, i * 400);
+            }
+            
+            console.log('✅ 週年紀念網站初始化完成！');
+            console.log('📱 響應式設計已優化，支援手機和桌面');
+            console.log('🎵 音樂檔案設定為: "let me take of you.mp3"');
+            console.log('✨ 新功能：時間軸編輯和留言刪除');
+            console.log('📅 增強功能：日期選擇器取代文字輸入');
+            console.log('🔄 全新功能：智能時間軸排序');
+            console.log('🛠️ 增強功能說明：');
+            console.log('   📅 時間軸：hover顯示編輯/刪除按鈕，使用日期選擇器');
+            console.log('   💌 留言板：hover顯示刪除按鈕');
+            console.log('   ➕ 可新增自定義時間軸項目（彈窗表單）');
+            console.log('   🔄 自動按日期排序，編輯日期後重新排列');
+            console.log('   📱 完全響應式設計，手機和桌面完美適配');
+            
             // 顯示初始排序完成提示
             setTimeout(() => {
                 const notification = document.createElement('div');
+                const isMobile = isMobileDevice();
                 notification.style.cssText = `
                     position: fixed;
-                    top: 100px;
-                    right: 20px;
+                    top: ${isMobile ? '80px' : '100px'};
+                    right: ${isMobile ? '10px' : '20px'};
                     background: linear-gradient(135deg, #667eea, #764ba2);
                     color: white;
-                    padding: 15px 20px;
+                    padding: ${isMobile ? '12px 15px' : '15px 20px'};
                     border-radius: 10px;
                     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
                     z-index: 1000;
-                    font-size: 14px;
+                    font-size: ${isMobile ? '12px' : '14px'};
                     opacity: 0;
                     transform: translateX(100%);
                     transition: all 0.3s ease;
+                    max-width: ${isMobile ? '280px' : 'none'};
                 `;
                 notification.innerHTML = `🎉 時間軸已按時間順序排列<br><small>編輯日期後會自動重新排序</small>`;
                 
@@ -2724,25 +2960,6 @@
                 }, 4000);
             }, 2000);
             
-            // 初始化日期選擇器預設值
-            initializeDateInputs();
-            
-            // 創建初始愛心
-            for (let i = 0; i < 5; i++) {
-                setTimeout(createFloatingHeart, i * 400);
-            }
-            
-            console.log('✅ 週年紀念網站初始化完成！');
-            console.log('🎵 音樂檔案設定為: "let me take of you.mp3"');
-            console.log('✨ 新功能：時間軸編輯和留言刪除');
-            console.log('📅 增強功能：日期選擇器取代文字輸入');
-            console.log('🔄 全新功能：智能時間軸排序');
-            console.log('🛠️ 增強功能說明：');
-            console.log('   📅 時間軸：hover顯示編輯/刪除按鈕，使用日期選擇器');
-            console.log('   💌 留言板：hover顯示刪除按鈕');
-            console.log('   ➕ 可新增自定義時間軸項目（彈窗表單）');
-            console.log('   🔄 自動按日期排序，編輯日期後重新排列');
-            
             // 顯示歡迎訊息
             setTimeout(() => {
                 console.log('🎉 歡迎使用增強版週年紀念網站！');
@@ -2754,9 +2971,13 @@
                 console.log('   • 編輯日期後會自動重新排序');
                 console.log('   • 點擊「重新排序」手動整理時間軸');
                 console.log('   • 所有修改都會自動保存');
+                console.log('   📱 手機用戶提示：');
+                console.log('     • 時間軸已優化為單欄顯示');
+                console.log('     • 點擊編輯按鈕進行修改');
+                console.log('     • 支援觸控操作');
                 console.log('⌨️ 鍵盤快捷鍵：');
                 console.log('   • 在新增回憶彈窗中：Ctrl+Enter 保存，Escape 取消');
-            }, 2000);
+            }, 3000);
         }
         
         // 初始化日期輸入框
