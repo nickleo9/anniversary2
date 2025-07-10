@@ -1428,6 +1428,12 @@
                     <button class="upload-btn" onclick="document.getElementById('importInput').click()">
                         📂 導入備份 (僅預覽)
                     </button>
+                    <button class="upload-btn" onclick="debugPhotos()">
+                        🔍 照片診斷
+                    </button>
+                    <button class="upload-btn" onclick="forceReloadPhotos()">
+                        🔄 重新載入照片
+                    </button>
                 </div>
                 
                 <input type="file" id="importInput" accept=".json" style="display: none;" onchange="importMemories(event)">
@@ -1879,7 +1885,7 @@
             photoElement.appendChild(errorMark);
         }
 
-        // 7. 創建照片元素 - 優化版：優先本地顯示
+        // 7. 創建照片元素 - 修正版：確保重新整理後正常顯示
         function createPhotoItemElement(photo) {
             if (!photo || !photo.id) {
                 console.error('照片資料無效:', photo);
@@ -1892,33 +1898,41 @@
             photoItem.id = photo.id;
 
             const caption = photo.caption || '我們的回憶';
-            const isGoogleDrivePhoto = photo.imageUrl && photo.driveFileId;
-            const isUploading = photo.isUploading;
+            const isGoogleDrivePhoto = photo.driveFileId; // 有 Drive ID 就是雲端照片
+            
+            console.log('創建照片元素:', {
+                id: photo.id,
+                hasImageData: !!photo.imageData,
+                hasDriveId: !!photo.driveFileId,
+                imageDataType: photo.imageData ? (photo.imageData.startsWith('data:') ? 'base64' : 'url') : 'none'
+            });
 
-            // 判斷使用哪種圖片源
+            // 判斷顯示方式的優先順序
+            let displayMethod = 'error';
             let imageSource = null;
-            let displayMethod = 'direct'; // direct, placeholder, error
 
+            // 1. 優先使用 base64 資料（最穩定）
             if (photo.imageData && photo.imageData.startsWith('data:image/')) {
-                // 優先使用 base64 數據（無 CORS 問題）
+                displayMethod = 'base64';
                 imageSource = photo.imageData;
-                displayMethod = 'direct';
-            } else if (photo.imageUrl && photo.imageUrl.includes('drive.google.com')) {
-                // Google Drive 圖片，由於 CORS 問題，使用預覽方式
-                displayMethod = 'placeholder';
-            } else if (photo.imageData) {
-                // 其他格式的圖片數據
+                console.log('使用 base64 顯示:', photo.id);
+            }
+            // 2. 如果有 Google Drive ID 但沒有 base64，顯示預覽介面
+            else if (photo.driveFileId) {
+                displayMethod = 'drive_placeholder';
+                console.log('使用 Drive 預覽介面:', photo.id);
+            }
+            // 3. 如果有其他圖片資料
+            else if (photo.imageData) {
+                displayMethod = 'other_image';
                 imageSource = photo.imageData;
-                displayMethod = 'direct';
-            } else {
-                displayMethod = 'error';
+                console.log('使用其他圖片資料:', photo.id);
             }
 
+            // 建立基本結構
             photoItem.innerHTML = `
                 <div class="photo-content">
-                    ${displayMethod === 'direct' ? '<div class="photo-loading">載入中...</div>' : ''}
-                    ${displayMethod === 'placeholder' ? createDrivePlaceholder(photo) : ''}
-                    ${displayMethod === 'error' ? '<div class="photo-error">無圖片資料</div>' : ''}
+                    <!-- 內容將根據顯示方式動態生成 -->
                 </div>
                 <div class="photo-controls">
                     <button class="photo-control-btn edit-btn" onclick="editCaption('${photo.id}')" title="編輯標題">✏️</button>
@@ -1931,42 +1945,75 @@
                 </div>
             `;
 
-            // 如果是直接顯示，載入圖片
-            if (displayMethod === 'direct' && imageSource) {
-                const img = document.createElement('img');
-                img.src = imageSource;
-                img.alt = caption;
-                
-                img.onload = () => {
-                    const loadingDiv = photoItem.querySelector('.photo-loading');
-                    if (loadingDiv) {
-                        loadingDiv.remove();
-                    }
-                    const photoContent = photoItem.querySelector('.photo-content');
-                    photoContent.prepend(img);
-                    console.log('✅ 照片載入成功:', photo.id);
-                };
-                
-                img.onerror = () => {
-                    console.error('❌ 照片載入失敗:', photo.id);
-                    const loadingDiv = photoItem.querySelector('.photo-loading');
-                    if (loadingDiv) {
-                        loadingDiv.innerHTML = `
-                            <div style="padding: 20px; text-align: center; color: #666;">
-                                <div>📸 照片載入失敗</div>
-                                <div style="font-size: 12px; margin-top: 5px;">
-                                    <button onclick="retryLoadPhoto('${photo.id}', '${imageSource}')" style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">重試</button>
+            const photoContent = photoItem.querySelector('.photo-content');
+
+            // 根據顯示方式處理
+            switch (displayMethod) {
+                case 'base64':
+                case 'other_image':
+                    // 顯示實際圖片
+                    photoContent.innerHTML = '<div class="photo-loading">載入中...</div>';
+                    const img = document.createElement('img');
+                    img.src = imageSource;
+                    img.alt = caption;
+                    
+                    img.onload = () => {
+                        const loadingDiv = photoContent.querySelector('.photo-loading');
+                        if (loadingDiv) {
+                            loadingDiv.remove();
+                        }
+                        photoContent.prepend(img);
+                        console.log('✅ 照片載入成功:', photo.id);
+                    };
+                    
+                    img.onerror = () => {
+                        console.error('❌ 照片載入失敗:', photo.id);
+                        if (isGoogleDrivePhoto) {
+                            // 如果是 Drive 照片且載入失敗，顯示預覽介面
+                            photoContent.innerHTML = createDrivePlaceholder(photo);
+                        } else {
+                            photoContent.innerHTML = `
+                                <div class="photo-error" style="
+                                    aspect-ratio: 1; display: flex; flex-direction: column; 
+                                    align-items: center; justify-content: center; 
+                                    background: #f8d7da; color: #721c24; text-align: center; padding: 20px;
+                                ">
+                                    <div style="font-size: 32px; margin-bottom: 10px;">📸</div>
+                                    <div>照片載入失敗</div>
+                                    <button onclick="retryLoadPhoto('${photo.id}', '${imageSource}')" style="
+                                        background: #667eea; color: white; border: none; 
+                                        padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-top: 10px;
+                                    ">重試</button>
                                 </div>
-                            </div>
-                        `;
-                    }
-                };
+                            `;
+                        }
+                    };
+                    break;
+
+                case 'drive_placeholder':
+                    // 顯示 Google Drive 預覽介面
+                    photoContent.innerHTML = createDrivePlaceholder(photo);
+                    break;
+
+                default:
+                    // 錯誤狀態
+                    photoContent.innerHTML = `
+                        <div class="photo-error" style="
+                            aspect-ratio: 1; display: flex; flex-direction: column; 
+                            align-items: center; justify-content: center; 
+                            background: #f8d7da; color: #721c24; text-align: center; padding: 20px;
+                        ">
+                            <div style="font-size: 32px; margin-bottom: 10px;">❌</div>
+                            <div>無圖片資料</div>
+                        </div>
+                    `;
+                    break;
             }
 
             gallery.appendChild(photoItem);
         }
 
-        // 創建 Google Drive 預覽佔位符
+        // 創建 Google Drive 預覽佔位符 - 改進版
         function createDrivePlaceholder(photo) {
             return `
                 <div class="drive-placeholder" style="
@@ -1980,24 +2027,30 @@
                     text-align: center;
                     padding: 20px;
                     border-radius: 10px;
+                    border: 2px dashed #dee2e6;
                 ">
-                    <div style="font-size: 48px; margin-bottom: 10px;">📸</div>
-                    <div style="font-weight: bold; margin-bottom: 5px;">儲存在雲端</div>
-                    <div style="font-size: 12px; margin-bottom: 15px; opacity: 0.7;">
-                        由於瀏覽器安全限制，<br>Google Drive 照片無法直接顯示
+                    <div style="font-size: 48px; margin-bottom: 15px;">☁️</div>
+                    <div style="font-weight: bold; margin-bottom: 8px; font-size: 16px;">雲端照片</div>
+                    <div style="font-size: 12px; margin-bottom: 15px; opacity: 0.7; line-height: 1.4;">
+                        此照片已安全備份至 Google Drive<br>
+                        由於瀏覽器安全限制，無法直接顯示
                     </div>
-                    <button onclick="openInDrive('${photo.driveFileId}')" style="
+                    <button onclick="openInDrive('${photo.driveFileId || ''}')" style="
                         background: linear-gradient(135deg, #4285f4, #34a853);
                         color: white;
                         border: none;
-                        padding: 8px 16px;
+                        padding: 10px 20px;
                         border-radius: 20px;
                         cursor: pointer;
                         font-size: 12px;
-                        transition: transform 0.2s;
+                        transition: all 0.2s;
+                        box-shadow: 0 2px 8px rgba(66,133,244,0.3);
                     " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                         📁 在 Google Drive 中檢視
                     </button>
+                    <div style="font-size: 10px; margin-top: 10px; opacity: 0.5;">
+                        照片檔案名稱：${photo.fileName || '未知'}
+                    </div>
                 </div>
             `;
         }
@@ -2445,7 +2498,71 @@
             setTimeout(() => heart.remove(), 6000);
         }
 
-        // 13. 備份功能
+        // 13. 新增：照片診斷工具
+        window.debugPhotos = function() {
+            console.log('=== 照片診斷報告 ===');
+            
+            const photoElements = document.querySelectorAll('.photo-item');
+            console.log(`總共找到 ${photoElements.length} 個照片元素`);
+            
+            photoElements.forEach((element, index) => {
+                const id = element.id;
+                const hasImg = element.querySelector('img') !== null;
+                const hasPlaceholder = element.querySelector('.drive-placeholder') !== null;
+                const hasError = element.querySelector('.photo-error') !== null;
+                
+                console.log(`照片 ${index + 1} (${id}):`, {
+                    hasImg: hasImg,
+                    hasPlaceholder: hasPlaceholder,
+                    hasError: hasError,
+                    captionText: element.querySelector('.caption-text')?.textContent
+                });
+            });
+            
+            // 檢查本地儲存的資料
+            const localData = loadDataFromLocal();
+            if (localData && localData.photos) {
+                console.log('本地儲存的照片資料:');
+                localData.photos.forEach((photo, index) => {
+                    console.log(`照片 ${index + 1}:`, {
+                        id: photo.id,
+                        hasImageData: !!photo.imageData,
+                        imageDataLength: photo.imageData ? photo.imageData.length : 0,
+                        hasDriveFileId: !!photo.driveFileId,
+                        caption: photo.caption
+                    });
+                });
+            }
+            
+            console.log('=== 診斷完成 ===');
+            console.log('如果照片無法顯示，請檢查：');
+            console.log('1. hasImageData 是否為 true');
+            console.log('2. imageDataLength 是否大於 0');
+            console.log('3. 如果都沒有，檢查雲端同步是否正常');
+        };
+
+        // 14. 新增：強制重新載入照片
+        window.forceReloadPhotos = async function() {
+            console.log('強制重新載入照片...');
+            
+            try {
+                // 清除本地快照中的照片資料
+                const localData = loadDataFromLocal();
+                if (localData) {
+                    localData.photos = [];
+                    saveDataToLocal(localData);
+                }
+                
+                // 重新從雲端載入
+                await loadData();
+                
+                console.log('照片重新載入完成');
+                alert('照片已重新載入！');
+            } catch (error) {
+                console.error('重新載入失敗:', error);
+                alert('重新載入失敗：' + error.message);
+            }
+        };
         function collectCurrentPageData() {
             const timeline = Array.from(document.querySelectorAll('.timeline-item[data-id]')).map(el => ({
                 id: el.dataset.id,
@@ -2508,7 +2625,7 @@
             event.target.value = '';
         }
 
-        // 14. 最終執行
+        // 16. 最終執行
         window.addEventListener('load', init);
     </script>
 </body>
